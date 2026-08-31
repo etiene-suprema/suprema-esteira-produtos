@@ -1,0 +1,47 @@
+schema_version: "1.0"
+
+extension:
+  id: produto
+  name: "Desenho de Produto (Suprema)"
+  version: "1.1.0"
+  description: "Dois passos da Trilha 1 da Esteira de Criação Suprema: propor e iterar a superfície do produto (navegação, telas, ações, estados, permissões) e, depois de aprovada, validá-la com um mockup HTML navegável."
+  category: "process"
+  effect: "read-write"
+  author: "Suprema Tech"
+  license: "UNLICENSED"
+
+requires:
+  speckit_version: ">=1.0.0"
+
+provides:
+  commands:
+    - name: "speckit.produto.desenho"
+      file: "commands/speckit.produto.desenho.md"
+      description: "Propõe a superfície do produto e itera com o usuário até a aprovação: perfis, navegação, telas, ações, filtros, estados, notificações, multi-marca e instrumentação"
+    - name: "speckit.produto.mockup"
+      file: "commands/speckit.produto.mockup.md"
+      description: "Gera um mockup HTML navegável do desenho e conduz a entrevista de validação, devolvendo o que emergir para a especificação"
+
+hooks:
+  # Depois de clarificar a spec, oferece o desenho do produto.
+  after_clarify:
+    command: "speckit.produto.desenho"
+    optional: true
+    prompt: "Propor a superfície do produto agora (navegação, telas, ações, estados)?"
+    description: "Trilha 1, passo 4 da Esteira de Criação Suprema"
+    condition: null
+
+  # Antes do checklist de aceite, oferece o mockup de validação.
+  before_checklist:
+    command: "speckit.produto.mockup"
+    optional: true
+    prompt: "Gerar o mockup navegável para validar o entendimento antes do aceite?"
+    description: "Trilha 1, passo 5 da Esteira de Criação Suprema"
+    condition: null
+
+tags:
+  - "produto"
+  - "ux"
+  - "mockup"
+  - "suprema"
+  - "discovery"
