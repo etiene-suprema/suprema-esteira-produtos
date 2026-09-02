@@ -1,1 +1,4 @@
 .DS_Store
+
+# graphify (grafo regenerável, nao versionar)
+graphify-out/

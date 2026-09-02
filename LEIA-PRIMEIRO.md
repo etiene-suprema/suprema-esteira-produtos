@@ -16,7 +16,7 @@ sessão do agente. O resto desta página é o mapa, para você entender onde est
 | **`PROMPT-NOVO-PRD.md`** | o prompt que inicia um PRD novo. É por aqui que você começa |
 | `ESTEIRA.md` | a esteira completa: trilhas, passos, critérios de pulo, regras de bloqueio. Vira o `CLAUDE.md` de cada projeto novo |
 | `CONSTITUICAO-ENGENHARIA.md` | os 9 princípios de engenharia que valem para todo serviço do grupo |
-| `extension-produto/` | a extensão da Suprema que entrega os passos 9 e 10. Instalada no bootstrap, não precisa ser aberta |
+| `extension-produto/` | a extensão da Suprema que entrega os passos 9, 10 e 11. Instalada no bootstrap, não precisa ser aberta |
 
 ---
 
@@ -59,7 +59,8 @@ reversibilidade**. Quem propôs a ideia não assina o veredicto sozinho.
 | 8 | Clarificar | `/speckit-clarify` | `spec.md` atualizado |
 | 9 | **Propor e aprovar a superfície do produto** | `/speckit-produto-desenho` | `desenho.md` |
 | 10 | **Mockup navegável de validação** | `/speckit-produto-mockup` | `mockup/index.html` |
-| 11 | **Portão: checklist e aceite** | `/speckit-checklist` | `checklist.md` |
+| 11 | **Compilar a entrega** | `/speckit-produto-compilar` | `entregaveis/`, `PRD.md` |
+| 12 | **Portão: checklist e aceite** | `/speckit-checklist` | `checklists/` |
 
 A constituição vem **antes** da especificação. Ela carrega as restrições de domínio, risco e
 regulatório. Especificar primeiro produz requisito que viola a própria régua, e a violação só
@@ -84,7 +85,18 @@ sair da entrevista volta para o `desenho.md` e para o `spec.md`.
 O mockup é **descartável**: HTML puro, dado fictício, faixa de aviso no topo. Nunca é
 aproveitado no código. O produto é construído do zero a partir do archetype, na Trilha 3.
 
-Depois do passo 11, **pare**. A fronteira com tecnologia é esse portão.
+O passo 9 escolhe o conjunto de seções pelo **tipo de produto**. Interface usa perfis,
+navegação, telas e estados. **Jogo** usa contrato de evento, estados de rodada, regras de
+aposta, carteira e auditoria, e só depois as telas mínimas: em jogo o entregável para tecnologia
+é o contrato de evento, não o menu.
+
+O passo 11 resolve a **fragmentação**. Os artefatos anteriores são o raciocínio; a unidade de
+execução é o item que viaja sozinho para o backlog. A compilação gera um arquivo autossuficiente
+por item, com contexto, requisito, critérios de aceite, métricas, recorte do desenho,
+dependências e fase, mais o PRD consolidado. **Os dois são gerados, nunca editados à mão**: para
+mudar, muda-se a especificação ou o desenho e roda o comando de novo.
+
+Depois do passo 12, **pare**. A fronteira com tecnologia é esse portão.
 
 ---
 
@@ -116,13 +128,16 @@ Não existe um arquivo único chamado PRD. Ele fica distribuído, e cada parte t
 | O que muda por marca | `desenho.md` |
 | Eventos a instrumentar | `desenho.md` |
 | Protótipo visual para validação | `mockup/index.html` |
+| Contrato de evento (produto de jogo) | `desenho.md` |
+| Item pronto para o backlog | `entregaveis/<PREFIXO>-NN.md` |
+| PRD consolidado, para circular | `PRD.md` |
 
 Todos ficam versionados no repositório do produto, ao lado do código que vier depois. É isso
 que faz o PRD continuar achável e verdadeiro seis meses depois.
 
 ---
 
-## Sete coisas que fazem diferença na prática
+## Oito coisas que fazem diferença na prática
 
 1. **Os comandos têm hífen**, não ponto: `/speckit-specify`.
 2. **Nunca rode um comando pelado.** Sem argumento, o agente infere de um repositório vazio ou
@@ -135,9 +150,13 @@ que faz o PRD continuar achável e verdadeiro seis meses depois.
 5. **Um único slug** para os cinco comandos da Trilha 0.
 6. **Não pule passo com "a gente já pensou nisso".** O critério de pulo é o artefato existir no
    disco e estar atual. Os critérios completos estão em `ESTEIRA.md`, seção 4.
-7. **Seis passos nunca se pulam nestas duas trilhas:** definir o problema, modelar opções,
-   decidir, constituição do domínio, especificar e desenhar a superfície do produto. O mockup
-   pula apenas em feature sem nenhum efeito visível para quem usa.
+7. **Sete passos nunca se pulam nestas duas trilhas:** definir o problema, modelar opções,
+   decidir, constituição do domínio, especificar, desenhar a superfície e compilar a entrega. O
+   mockup pula só em feature sem efeito visível para quem usa; a compilação pula só quando a
+   mesma pessoa especifica e executa na sequência.
+8. **Se o `shape` não fechar sem resposta que só o código dá**, isso é um **spike**: pergunta
+   escrita, prazo, saída registrada e código descartável. É o único caso em que se toca
+   tecnologia antes da Trilha 2, e é autorizado, não improvisado. Detalhe em `ESTEIRA.md`.
 
 ---
 

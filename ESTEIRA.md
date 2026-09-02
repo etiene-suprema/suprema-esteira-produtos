@@ -56,8 +56,8 @@ specify extension add "$ESTEIRA_DIR"/extension-produto --dev
 - **`assess`** entrega a Trilha 0. Sem ela, os comandos `/speckit-assess-*` não existem e a
   trilha de descoberta não tem como rodar.
 - **`bug`** entrega a Trilha 4. Sem ela, correção de bug não tem caminho e vira commit avulso.
-- **`produto`** entrega os passos 4 e 5 da Trilha 1: a proposta da superfície do produto e o
-  mockup de validação. É extensão da própria Suprema, por isso instala de diretório local com
+- **`produto`** entrega os passos 4, 5 e 6 da Trilha 1: a proposta da superfície do produto, o
+  mockup de validação e a compilação da entrega. É extensão da própria Suprema, por isso instala de diretório local com
   `--dev`, apontando para a pasta `extension-produto` deste repositório. Sem ela, o PRD
   sai sem tela, sem menu e sem botão, e o produto só vira concreto na mão do desenvolvedor.
 
@@ -70,7 +70,7 @@ de diretório que já tem arquivos, acrescente `--force`.
 <projeto>/
 ├── CLAUDE.md                      ← este arquivo, copiado do template
 ├── .gitignore                     ← inclui .claude/ e .DS_Store
-├── .claude/skills/                ← 20 skills (10 core + 5 assess + 3 bug + 2 produto)
+├── .claude/skills/                ← 21 skills (10 core + 5 assess + 3 bug + 3 produto)
 └── .specify/
     ├── memory/constitution.md     ← ainda com placeholder neste momento
     ├── templates/                 ← 5 templates
@@ -82,7 +82,7 @@ de diretório que já tem arquivos, acrescente `--force`.
     └── workflows/speckit/
 ```
 
-Confira a contagem de skills antes de começar:
+Confira a contagem de skills antes de começar (esperado: 21):
 
 ```bash
 ls .claude/skills | wc -l
@@ -137,6 +137,27 @@ Tudo em `.specify/assessments/<slug>/`.
 O portão pontua sempre pelos **mesmos quatro critérios**: impacto, esforço, risco regulatório,
 reversibilidade. O veredicto é `seguir`, `esclarecer` ou `matar`.
 
+#### Spike: desvio autorizado a partir do passo 4
+
+Às vezes o `shape` não fecha sem uma resposta que só o código dá: "isso encaixa na plataforma
+sem alterar o hospedeiro?", "esse provedor entrega o que promete?". Isso é um **spike**, e ele é
+o único caso em que se toca tecnologia antes da Trilha 2.
+
+O spike é **autorizado**, não improvisado. Quatro exigências, todas obrigatórias:
+
+| Exigência | Por quê |
+|---|---|
+| **Pergunta escrita**, uma só, respondível com sim ou não | spike sem pergunta vira projeto paralelo |
+| **Prazo** definido na autorização | o custo do spike é o tempo, e ele precisa de teto |
+| **Saída em `spike-<slug>.md`**: a pergunta, o que foi tentado, a resposta, a recomendação | sem registro, o aprendizado morre com a sessão |
+| **Código produzido é descartável** | mesma regra do mockup: não entra em produção, não é referência de estrutura |
+
+Depois do spike, volta-se ao `shape` com a resposta, e o `decide` a considera.
+
+Por que isto existe declarado em vez de "resolver depois": sem caminho legítimo, tocar
+tecnologia na descoberta acontece **por fora**, e acontece exatamente nos casos de maior risco,
+que são os que mais precisavam de registro. Nomear custa meia página e fecha o furo.
+
 ### Trilha 1 · Definição do produto
 
 | # | Passo | Comando | Artefato |
@@ -146,7 +167,8 @@ reversibilidade. O veredicto é `seguir`, `esclarecer` ou `matar`.
 | 3 | Clarificar | `/speckit-clarify` | `spec.md` atualizado |
 | 4 | **Propor e aprovar a superfície do produto** | `/speckit-produto-desenho` | `desenho.md` |
 | 5 | **Mockup navegável de validação** | `/speckit-produto-mockup` | `mockup/index.html` |
-| 6 | **Portão: checklist e aceite** | `/speckit-checklist` | `checklist.md` |
+| 6 | **Compilar a entrega** | `/speckit-produto-compilar` | `entregaveis/`, `PRD.md` |
+| 7 | **Portão: checklist e aceite** | `/speckit-checklist` | `checklists/` |
 
 A constituição vem **antes** da especificação, sempre. Ela contém as restrições de domínio,
 risco e regulatório. Especificar primeiro produz requisito que viola a própria régua, e a
@@ -176,6 +198,24 @@ depois.
 
 O mockup é **descartável**: HTML e CSS puros, dado fictício, nunca aproveitado no código. A
 construção acontece a partir do archetype, na Trilha 3.
+
+O passo 4 escolhe o **conjunto de seções pelo tipo de produto**. Interface (web, app,
+back-office) usa perfis, navegação, telas, estados e permissões. **Jogo** usa contrato de
+evento, estados de rodada, regras de aposta, integração de carteira, jogo responsável e
+auditoria, e só então as telas mínimas. Em jogo, menu é quase irrelevante: o entregável do
+upstream para tecnologia é o **contrato de evento**, e ele não é inventado, é validado contra o
+contrato vigente do RGS.
+
+O passo 6 resolve a **fragmentação**. Os artefatos anteriores são o raciocínio e a fonte de
+verdade, mas a unidade de execução é o item: uma história, um épico, uma task, que viaja sozinha
+para o backlog. A compilação gera **um arquivo autossuficiente por item** (contexto, requisito,
+critérios de aceite, métricas que move, recorte do desenho, dependências, fase) mais o **PRD
+consolidado** no formato da Suprema. As duas saídas são **geradas, nunca editadas à mão**:
+quando a especificação ou o desenho mudarem, o comando roda de novo e regera.
+
+Requisito é numerado **por subsistema**, não global: o prefixo diz quem é o dono e é o que faz o
+item ser roteável para a sub-frente certa. Exemplo real do Projeto Selva: `C-` cliente do jogo,
+`S-` servidor, `I-` integração com operadores, `A-` painel administrativo.
 
 ### Trilha 2 · Nascimento do serviço
 
@@ -216,7 +256,57 @@ fila com o planejamento evita bloqueio na hora de implementar.
 
 ---
 
-## 3 · Regras de bloqueio (a parte que morde)
+## 3 · Onde os artefatos moram
+
+A ferramenta é **escopada por diretório**: o projeto é qualquer diretório que contenha
+`.specify/`. A resolução prefere o `.specify/` **mais próximo**, não a raiz do git. Isso permite
+vários projetos independentes num só repositório, cada um com **constituição, numeração de
+feature e artefatos próprios**.
+
+É assim que a esteira acomoda sub-frentes:
+
+```text
+suprema-produtos/
+├── .git/
+├── growth/
+│   ├── .specify/memory/constitution.md    ← domínio: growth
+│   └── specs/001-…, 002-…                 ← numeração própria
+├── jogos/
+│   ├── .specify/memory/constitution.md    ← domínio: jogos
+│   └── specs/001-…
+└── kyc/
+    ├── .specify/memory/constitution.md    ← domínio: kyc
+    └── specs/001-…
+```
+
+Uma sub-frente é inicializada como projeto independente:
+
+```bash
+specify init growth --integration claude --script sh
+```
+
+**Uma constituição por sub-frente, não uma para todas.** É o ponto que decide a estrutura: as
+regras de domínio de jogos não são as de KYC. Teto de exposição de campanha não diz nada sobre
+retenção de documento. Pasta única forçaria constituição única, e ela viraria genérica, que é o
+mesmo que não existir.
+
+O que **não** se repete por sub-frente: a Constituição de Engenharia da Suprema. Ela é
+organizacional, vale para todas, e a constituição da sub-frente a herda e complementa.
+
+**Prefixo de requisito acompanha a sub-frente.** A compilação numera por subsistema (`C-`, `S-`,
+`I-`, `A-`), e o prefixo é o que roteia o item para o dono certo no backlog.
+
+**Para rodar de fora do diretório**, sem `cd`, aponte a variável de ambiente que seleciona o
+projeto para a pasta que contém o `.specify/`. Útil em automação. A seleção do projeto e a
+seleção da feature são eixos independentes.
+
+**Quando a sub-frente vira serviço:** na Trilha 2 o serviço nasce do archetype em repositório
+próprio, e os artefatos de `.specify/` da sub-frente são copiados para lá. A partir daí a
+feature seguinte daquele serviço roda no repositório dele.
+
+---
+
+## 4 · Regras de bloqueio (a parte que morde)
 
 **Antes de executar qualquer comando abaixo, verifique a pré-condição no disco.** Se o
 arquivo exigido não existe, ou existe mas não satisfaz a condição, **NÃO execute o comando**.
@@ -231,8 +321,9 @@ Informe qual passo falta e pare.
 | `/speckit-clarify` | `spec.md` existe | rode `specify` |
 | `/speckit-produto-desenho` | `spec.md` existe | rode `specify` |
 | `/speckit-produto-mockup` | `desenho.md` com `**Status**: aprovado` no cabeçalho | o desenho ainda está em iteração |
-| `/speckit-checklist` | `spec.md` **e** `desenho.md` existem | falta especificar ou desenhar |
-| `/speckit-plan` | `spec.md` sem marcação de indefinição pendente, `desenho.md` e `checklist.md` presentes | rode `clarify`, `produto-desenho` e `checklist` |
+| `/speckit-produto-compilar` | `desenho.md` com `**Status**: aprovado` | o desenho ainda está em iteração |
+| `/speckit-checklist` | `spec.md`, `desenho.md` e `entregaveis/` existem | falta especificar, desenhar ou compilar |
+| `/speckit-plan` | `spec.md` sem indefinição pendente, mais `desenho.md`, `entregaveis/` e `checklists/` presentes | rode `clarify`, `produto-desenho`, `produto-compilar` e `checklist` |
 | `/speckit-tasks` | `plan.md` com a seção de Constitution Check **preenchida**, declarando conformidade princípio por princípio | o plano está incompleto |
 | `/speckit-implement` | `tasks.md` existe | rode `tasks` |
 | `/speckit-converge` | `tasks.md` existe e há código implementado | rode `implement` |
@@ -273,10 +364,16 @@ vazio) são responsabilidade sua, agente, e MUST ser conferidas lendo o arquivo.
     rápido de perder todos os gates de qualidade de uma vez.
 11. **Incorporar escopo novo em silêncio.** Se a entrevista do mockup fizer o escopo crescer,
     diga na cara que é escopo novo e que a decisão de incluir é de quem assina o portão.
+12. **Editar à mão o que foi gerado.** `entregaveis/` e `PRD.md` são saída da compilação. Mudança
+    neles se faz mudando `spec.md` ou `desenho.md` e regerando. Editar o compilado cria uma
+    segunda fonte de verdade, que é o problema que a esteira existe para evitar.
+13. **Inventar contrato de evento de jogo.** O contrato vigente do RGS é a régua. Localize-o no
+    repositório do jogo ou pergunte o caminho. Valor novo em enum fechado é mudança de contrato,
+    sujeita à disciplina de versão.
 
 ---
 
-## 4 · Critérios de pulo
+## 5 · Critérios de pulo
 
 Um passo só é pulável se o **artefato de saída existe e está atual**. "A gente já pensou
 nisso" não é critério. O critério é o arquivo.
@@ -293,6 +390,7 @@ nisso" não é critério. O critério é o arquivo.
 | `clarify` | não há marcação de indefinição na spec (verificável por busca) | |
 | Desenho do produto | a feature não acrescenta nem altera nenhuma tela, menu, coluna, filtro, ação ou permissão. Se acrescenta ou altera qualquer um deles, **não pula** | |
 | Mockup de validação | feature que só muda regra de cálculo ou processamento, sem efeito visível para quem usa. Obrigatório em tela nova, em mudança de navegação e em qualquer feature de prioridade P1 | |
+| Compilar a entrega | **nunca pula** quando o trabalho vai para o backlog de outra pessoa. Pula só em feature que a mesma pessoa especifica e executa na sequência | ✱ |
 | `checklist` | feature de prioridade baixa, **a critério de produto**. Obrigatório em feature que toque dinheiro, dado de identidade ou comunicação com apostador | |
 | Trilha 2 inteira | o serviço já existe **e** o inventário de divergências está registrado | |
 | Escolha da variante | | ✱ erro aqui é retrabalho, não config |
@@ -306,7 +404,7 @@ nisso" não é critério. O critério é o arquivo.
 
 ---
 
-## 5 · Portões e assinatura
+## 6 · Portões e assinatura
 
 Portão sem dono nomeado não é portão.
 
@@ -323,7 +421,7 @@ tenant, contrato de erro, e se a especificação resolve o problema que foi desc
 
 ---
 
-## 6 · Persistência dos artefatos
+## 7 · Persistência dos artefatos
 
 Modelo **spec-anchored**. Os artefatos **sobrevivem** à implementação e são a fonte de
 verdade para a mudança seguinte.
@@ -338,7 +436,7 @@ especificação que ninguém manteve.
 
 ---
 
-## 7 · Referências
+## 8 · Referências
 
 | Documento | Onde | Rege |
 |---|---|---|
@@ -353,7 +451,7 @@ Constituição de serviço que contradiga a de engenharia é inválida naquele p
 
 ---
 
-## 8 · O que este arquivo garante, e o que não garante
+## 9 · O que este arquivo garante, e o que não garante
 
 **Garante:** o agente carrega estas instruções em toda sessão e passa a recusar comando fora
 de ordem, com a pré-condição nomeada. Cobre o caso comum, que é alguém pedir para pular etapa

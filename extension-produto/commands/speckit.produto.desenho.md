@@ -40,6 +40,23 @@ Considere a entrada antes de prosseguir, se não estiver vazia.
 5. Se `desenho.md` já existe e está aprovado, trate como revisão: mostre o que vai mudar antes
    de mudar.
 
+## Passo 0 · Tipo de produto
+
+Antes de propor qualquer coisa, decida o **tipo**, porque ele troca o conjunto de seções. Derive
+do `spec.md` e da descoberta; se ficar ambíguo, **pergunte**.
+
+| Tipo | Quando | Superfície que importa |
+|---|---|---|
+| **Interface** | web, app, back-office, painel | menus, telas, ações, estados, permissões |
+| **Jogo** | slot, crash, mesa, qualquer produto de rodada | contrato de evento, estados de rodada, regras de aposta, integração de carteira |
+| **Híbrido** | jogo com back-office próprio | os dois conjuntos, em seções separadas |
+
+Registre o tipo no cabeçalho do `desenho.md`, junto do status.
+
+Erro clássico que isso evita: desenhar jogo como se fosse tela. Em jogo, menu é quase
+irrelevante e o entregável do upstream para tecnologia é **contrato de evento**. Desenhar as
+telas e esquecer os eventos entrega meio produto.
+
 ## As duas marcas, e por que elas existem
 
 Proposta sem marcação de origem produz ancoragem: o usuário aceita o enquadramento do agente e
@@ -63,8 +80,12 @@ Regras das marcas, sem exceção:
 
 ## Fase A · Propor
 
-Escreva `specs/<feature>/desenho.md` completo, com **todas** as 11 seções abaixo. Nenhuma seção
-é omitida: seção sem base recebe `[INDEFINIDO]`.
+Escreva `specs/<feature>/desenho.md` completo. O conjunto de seções depende do tipo declarado
+no passo 0. Nenhuma seção é omitida: seção sem base recebe `[INDEFINIDO]`.
+
+- **Interface** → seções 1 a 11 abaixo
+- **Jogo** → seções J1 a J8 abaixo
+- **Híbrido** → J1 a J8 para o jogo, mais 1 a 11 para o back-office, em blocos separados
 
 O cabeçalho do arquivo MUST conter, nesta forma exata, porque o passo seguinte depende dele:
 
@@ -151,6 +172,79 @@ aqui, não depois do lançamento.
 
 O que deliberadamente **não** tem tela nesta versão, e por quê. Espelha as não-metas da
 descoberta.
+
+### Seções de produto de jogo (tipo Jogo)
+
+Use este conjunto quando o tipo for Jogo. A ordem importa: o contrato vem antes da tela, porque
+é ele que a tecnologia consome.
+
+#### J1 · O jogo em uma página
+
+Como se joga, em prosa, para alguém que nunca viu. Formato, mecânica central, o que dispara
+bônus, ritmo de rodada. É o resumo que a pessoa lê antes da reunião.
+
+#### J2 · Contrato de evento
+
+**O entregável mais importante deste desenho.** A Suprema já tem contrato vigente: o
+**`spin_event.v1`**, definido em `TECH_DESIGN.md` §4 do projeto do jogo, com o schema espelhado
+em `DATA_SPEC-analytics.md`.
+
+**Você NÃO propõe taxonomia nova.** Localize o contrato vigente no repositório do jogo e, se não
+encontrar, **pergunte o caminho**. Nunca invente campo nem enum.
+
+Com o contrato em mão, responda:
+
+- **Quais eventos este jogo emite**, e em que condição
+- **Quais campos mudam de significado ou de faixa** neste jogo
+- **Precisa de valor novo em enum fechado?** (`action`, `feature_type`, `reject_reason`) Se sim,
+  isto é **mudança de contrato**: registre que está sujeita à disciplina de versão, porque a
+  primeira emissão em produção tranca a versão e mudança quebrante vira a próxima
+- **O que é dimensão, não campo de evento.** Valor teórico, volatilidade e teto de ganho vivem
+  em tabela de dimensão com join por chave de versão de math, não no evento
+- **Convenções herdadas não-negociáveis**: dinheiro sempre em inteiro na unidade mínima; a
+  fórmula de receita bruta é a do contrato, com o filtro de rodada liquidada e não-replay
+
+#### J3 · Estados de rodada e de sessão
+
+A máquina de estados da rodada, incluindo o caminho de rejeição e o de replay. Quem é a
+autoridade de cada transição. O que é idempotente e por qual chave.
+
+#### J4 · Regras de aposta e economia
+
+Faixas de aposta, o que é configurável por operador e por jurisdição, compra de bônus se
+existir, e o que é travado por regra. Valores concretos de matemática **não** entram aqui:
+vivem no artefato de math versionado, e este desenho aponta para ele.
+
+#### J5 · Integração de carteira
+
+O modelo de custódia de saldo, a sequência de débito e crédito, o que acontece em falha e
+timeout do operador, e a política de reconciliação. Aponte para a especificação de API em vez
+de reproduzi-la.
+
+#### J6 · Jogo responsável e auditoria
+
+O que bloqueia rodada, quem é a autoridade do bloqueio, e o que é apenas observacional.
+Atenção: sinal de jogo responsável em pipeline de analytics é observacional e **nunca** decide
+bloqueio. Mais o que precisa ser recuperável por rodada para responder a disputa e auditoria.
+
+#### J7 · Telas mínimas
+
+Só as que existem: jogo, informação e regras, histórico de rodada, e o que a operação precisa
+ver. Para cada uma, o mesmo detalhe da seção 4 do conjunto de interface, incluindo estado de
+erro e de reconexão.
+
+#### J8 · Instrumentação e o que o contrato não serve
+
+Para **cada métrica** do `spec.md`, uma de três respostas:
+
+1. **Serve**: o campo do evento que a alimenta
+2. **É dimensão**: onde vive e por qual chave se junta
+3. **Falta stream**: não existe no contrato nem como dimensão
+
+O caso 3 é o achado caro e MUST ser destacado. Precedente real do Projeto Selva: o evento de
+rodada só enxerga rodadas, e primeiro depósito, registro e depósito vivem no operador. Os
+indicadores de primeiro depósito do brief dependiam de um segundo fluxo que não existia, e isso
+foi descoberto tarde, por olho humano.
 
 ### 11 · Conformidade com a constituição
 

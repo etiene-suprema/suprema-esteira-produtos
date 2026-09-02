@@ -1,6 +1,6 @@
 # Extensão Produto (Suprema)
 
-Acrescenta os passos 4 e 5 da Trilha 1 da Esteira de Criação Suprema. Extensão interna, não
+Acrescenta os passos 4, 5 e 6 da Trilha 1 da Esteira de Criação Suprema. Extensão interna, não
 publicada em catálogo.
 
 ## Por que ela existe
@@ -20,6 +20,7 @@ tarde e sem quem responde pelo produto na sala.
 |---|---|---|
 | `/speckit-produto-desenho` | `specs/<feature>/desenho.md` | Propõe a superfície completa do produto em 11 seções e itera em rodadas até a aprovação explícita |
 | `/speckit-produto-mockup` | `specs/<feature>/mockup/index.html` | Gera um mockup navegável, conduz a entrevista de validação e devolve o que emergir para `desenho.md` e `spec.md` |
+| `/speckit-produto-compilar` | `specs/<feature>/entregaveis/`, `specs/<feature>/PRD.md` | Compila os artefatos fragmentados em um arquivo autossuficiente por item, mais o PRD consolidado no formato Suprema |
 
 ### O método: proposta primeiro
 
@@ -42,7 +43,22 @@ tudo.
 Itera em rodadas (`**Status**: proposta · rodada N`) até a **aprovação explícita**, que grava
 `**Status**: aprovado` no cabeçalho. Silêncio não é aprovação.
 
-### O que o desenho cobre
+### Dois tipos de produto
+
+O passo 4 decide o tipo antes de propor, porque ele troca o conjunto de seções:
+
+| Tipo | Seções |
+|---|---|
+| **Interface** (web, app, back-office) | perfis, navegação, inventário de telas, detalhe por tela, fluxos, componentes, notificação, multi-marca, instrumentação |
+| **Jogo** (slot, crash, mesa) | o jogo em uma página, **contrato de evento**, estados de rodada, regras de aposta, carteira, jogo responsável e auditoria, telas mínimas, instrumentação |
+| **Híbrido** | os dois, em blocos separados |
+
+Em jogo, o entregável do upstream para tecnologia é o **contrato de evento**, não o menu. O
+comando **não inventa taxonomia**: localiza o contrato vigente do RGS no repositório do jogo e
+valida contra ele. Valor novo em enum fechado é mudança de contrato, sujeita à disciplina de
+versão.
+
+### O que o desenho cobre (tipo interface)
 
 1. Perfis e permissões, incluindo o perfil de operação ou back-office, que é o mais esquecido
 2. Mapa de navegação, com qual perfil vê cada item
@@ -70,6 +86,32 @@ Depois de entregar, conduz cinco blocos de entrevista: o que está errado, o que
 os perfis, o pior dia (estado vazio e erro), e **a ideia nova**. O último é o mais valioso e o
 mais fácil de esquecer.
 
+### O que a compilação resolve
+
+A Trilha 1 produz raciocínio fragmentado por natureza, e isso é bom: cada artefato tem um
+propósito e junto eles são a fonte de verdade. Mas a **unidade de execução** é o item, que viaja
+sozinho para o backlog. Quem abre o card não tem os outros seis arquivos ao lado.
+
+Duas saídas:
+
+- **`entregaveis/<PREFIXO>-NN.md`**, um por item: contexto, requisito, critérios de aceite,
+  métricas que move, recorte do desenho (telas, ações, estados, permissões), dependências, fora
+  de escopo, fase
+- **`PRD.md`**, consolidado no formato Suprema: produto em uma página, requisitos por
+  subsistema, roadmap faseado com critério de saída por fase, riscos com mitigação, premissas
+
+Três regras:
+
+1. **Numeração por subsistema, não global.** `C-` cliente, `S-` servidor, `I-` integração, `A-`
+   admin. O prefixo diz o dono e roteia o item para a sub-frente certa.
+2. **Gerado, nunca editado à mão.** Mudança se faz na especificação ou no desenho, com
+   regeração. Editar o compilado cria segunda fonte de verdade.
+3. **PRD é só produto.** A parte técnica é apontada, não duplicada. Duplicar stack entre PRD e
+   design técnico é a origem do drift.
+
+Em produto de jogo, a compilação confronta **cada métrica** com o contrato de evento e responde
+uma de três coisas: serve, é dimensão, ou falta stream. O terceiro caso é o achado caro.
+
 ## Guardas obrigatórias do mockup
 
 - **Não é implementação.** Nada de `mockup/` entra no código de produção. O produto nasce do
@@ -87,7 +129,8 @@ Registrados automaticamente na instalação, ambos opcionais e com confirmação
 | Evento | Oferece | Momento na esteira |
 |---|---|---|
 | `after_clarify` | `/speckit-produto-desenho` | logo depois de clarificar a spec |
-| `before_checklist` | `/speckit-produto-mockup` | antes do portão de aceite |
+| `before_checklist` | `/speckit-produto-mockup` (prioridade 5) | antes do portão de aceite |
+| `before_checklist` | `/speckit-produto-compilar` (prioridade 10) | depois do mockup, antes do aceite |
 
 ## Instalação
 
@@ -103,8 +146,9 @@ Confirme que as duas skills apareceram:
 ls .claude/skills | grep produto
 ```
 
-Devem aparecer `speckit-produto-desenho` e `speckit-produto-mockup`. Com as três extensões da
-esteira instaladas (`assess`, `bug`, `produto`), o projeto tem **20 skills**.
+Devem aparecer `speckit-produto-desenho`, `speckit-produto-mockup` e
+`speckit-produto-compilar`. Com as três extensões da esteira instaladas (`assess`, `bug`,
+`produto`), o projeto tem **21 skills**.
 
 ## Manutenção
 
@@ -115,4 +159,4 @@ tempo de execução.
 
 ---
 
-**Versão** 1.1.0 · **Requer** Spec Kit >= 1.0.0 · **Rege** Trilha 1, passos 4 e 5
+**Versão** 1.2.0 · **Requer** Spec Kit >= 1.0.0 · **Rege** Trilha 1, passos 4, 5 e 6

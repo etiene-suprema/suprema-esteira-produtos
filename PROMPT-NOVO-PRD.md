@@ -30,7 +30,8 @@ O QUE QUERO NESTA SESSÃO:
 Rodar a Trilha 0 (Descoberta) e a Trilha 1 (Definição do produto), nesta ordem, e
 nada além disso. O resultado esperado é um PRD completo distribuído nos artefatos:
 intake.md, research.md, problem.md, concept.md, decision.md, constitution.md,
-spec.md, desenho.md e um mockup HTML navegável.
+spec.md, desenho.md, um mockup HTML navegável, os itens de entrega em
+entregaveis/ e o PRD consolidado.
 
 COMECE ASSIM, sem me perguntar nada antes:
 1. Execute o bootstrap da seção 1 do ESTEIRA.md. Crie o projeto num
@@ -39,7 +40,7 @@ COMECE ASSIM, sem me perguntar nada antes:
    (assess, bug e a extensão produto deste repositório, com --dev), copie
    ESTEIRA.md como CLAUDE.md na raiz do projeto novo, e coloque .claude/
    e .DS_Store no .gitignore dele.
-2. Valide o estado esperado da seção 1.3: confirme que existem 20 skills e que
+2. Valide o estado esperado da seção 1.3: confirme que existem 21 skills e que
    .specify/memory/constitution.md ainda está com placeholder.
 3. Me mostre a árvore do projeto criado e só então pare para conversar comigo.
 
@@ -77,11 +78,14 @@ copiados para lá. Não antecipe isso agora.
 ## O que acontece depois de colar
 
 O agente executa o bootstrap sozinho, mostra a árvore e para. A partir daí você percorre os
-onze passos das Trilhas 0 e 1, um por vez, com o agente parando em cada portão.
+doze passos das Trilhas 0 e 1, um por vez, com o agente parando em cada portão.
 
 O percurso completo e os artefatos de cada passo estão em `LEIA-PRIMEIRO.md`.
 
-Nos passos 9 e 10 o agente vai te entrevistar em blocos sobre a superfície do produto (menus,
-telas, botões, filtros, estados, perfis, marcas) e depois gerar um mockup navegável para você
-conferir se ele entendeu. É nesse ponto que a maioria das ideias novas aparece, então reserve
-tempo para olhar o mockup com calma.
+Nos passos 9 a 11 o agente propõe a superfície do produto (você reage em vez de responder
+questionário), gera um mockup navegável para você conferir se ele entendeu, e compila tudo em
+itens prontos para o backlog mais o PRD consolidado. É no mockup que a maioria das ideias novas
+aparece, então reserve tempo para olhar com calma.
+
+Se o produto for um jogo, o passo 9 troca o conjunto de seções: o entregável para tecnologia
+passa a ser o contrato de evento, não o menu.
