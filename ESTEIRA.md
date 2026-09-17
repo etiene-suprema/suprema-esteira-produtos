@@ -114,7 +114,7 @@ inteira, ou pula passos com critério verificável. Nunca "meio pula".
 TRILHA 0 · Descoberta          por ideia            produto + operações
 TRILHA 1 · Definição           por iniciativa       produto + operações
      ─────────── fronteira: aqui produto entrega para tech ───────────
-TRILHA 2 · Nascimento          uma vez por serviço  tech + SRE
+TRILHA 2 · Nascimento          uma vez por serviço  tech (local-first; SRE depois)
 TRILHA 3 · Construção          por feature          tech
 TRILHA 4 · Sustentação         contínuo             time do serviço
 ```
@@ -217,22 +217,38 @@ Requisito é numerado **por subsistema**, não global: o prefixo diz quem é o d
 item ser roteável para a sub-frente certa. Exemplo real do Projeto Selva: `C-` cliente do jogo,
 `S-` servidor, `I-` integração com operadores, `A-` painel administrativo.
 
-### Trilha 2 · Nascimento do serviço
+### Trilha 2 · Nascimento do serviço (local-first)
 
-| # | Passo | Artefato |
+Roda **local-first**: o serviço nasce e é provado na máquina, sem depender do SRE. O archetype
+sobe inteiro com `docker compose` (Postgres, mais Redis e LocalStack na variante completa) e
+roda os **mesmos gates do CI localmente**. Verde aqui é verde no CI.
+
+| # | Passo | Artefato / prova |
 |---|---|---|
-| 1 | Escolher a variante do archetype | ADR de variante |
-| 2 | Gerar o serviço a partir do archetype | repositório |
-| 3 | Consolidar a constituição do serviço | `constitution.md` (mãe + domínio) |
-| 4 | Declarar infraestrutura e abrir PR ao SRE | `deploy/infra/requirements.yaml` |
-| 5 | Registrar no catálogo | `catalog-info.yaml` |
-| 6 | Remover o módulo de exemplo | ausência de `src/modules/users/` |
+| 0 | Subir a SayPlus localmente | host de pé na máquina (pré-requisito do módulo) |
+| 1 | Escolher o archetype | ADR de variante |
+| 2 | Gerar o serviço a partir do archetype, adaptando pela documentação `.md` dele | repo `<serviço>-api` |
+| 3 | Rodar local: `docker compose up`, migrations, **gates verdes** | serviço de pé, gates passando |
+| 4 | Consolidar a constituição do serviço | `constitution.md` (mãe + domínio) |
+| 5 | Remover o módulo de exemplo | ausência de `src/modules/users/` (ou `petstore`) |
+| 6 | Conectar o módulo à SayPlus localmente | integração funcionando local |
 
-Critério do passo 1, decidido **com a spec na mão**: o domínio precisa de cache distribuído,
-mensageria ou HTTP externo? Não, variante **simples**. Sim, variante **completa**.
+**Escolha do archetype**, decidida **com a spec na mão** e registrada em ADR:
 
-O passo 4 começa **cedo de propósito**: o PR ao SRE tem espera externa, e paralelizar essa
-fila com o planejamento evita bloqueio na hora de implementar.
+| Precisa de cache distribuído, mensageria ou HTTP externo? | Desenho | Archetype |
+|---|---|---|
+| Não | tradicional em camadas | `simplified-traditional-archetype` (simples) |
+| Sim | tradicional em camadas | `traditional-archetype` (completa) |
+| Sim, e o domínio é complexo, com muita regra ou integração isolável | hexagonal (ports/adapters) | `layered-archetype` (completa) |
+
+Errar a escolha não é ajuste de config: a variante simples carrega um gate de arquitetura que
+**derruba o build** ao encontrar import de cache, mensageria ou HTTP externo. A correção depois
+é retrabalho.
+
+**SRE adiado.** Enquanto a fase é local, a declaração de infraestrutura
+(`deploy/infra/requirements.yaml`) e o registro no catálogo (`catalog-info.yaml`) ficam no repo
+como **contrato para depois**, mas não se abre PR ao SRE nem se provisiona nada. A reentrada do
+SRE é decisão registrada em ADR, quando o serviço precisar de ambiente compartilhado.
 
 ### Trilha 3 · Construção
 
@@ -241,9 +257,14 @@ fila com o planejamento evita bloqueio na hora de implementar.
 | 1 | **Portão: planejar com Constitution Check** | `/speckit-plan` | `plan.md` |
 | 2 | Quebrar em tasks | `/speckit-tasks` | `tasks.md` |
 | 3 | Analisar consistência | `/speckit-analyze` | relatório |
-| 4 | Implementar em ondas | `/speckit-implement` | código |
-| 5 | **Portão: convergir** | `/speckit-converge` | `tasks.md` com pendências |
-| 6 | **Portão: PR com gates** | — | PR aprovado |
+| 4 | Implementar em ondas (back em `-api`, front em `-web`) | `/speckit-implement` | código |
+| 5 | Migrar as telas da SayPlus (front) | via `frontend-engineer.md` | código em `<serviço>-web` |
+| 6 | **Portão: convergir** | `/speckit-converge` | `tasks.md` com pendências |
+| 7 | **Portão: PR com gates** | — | PR aprovado |
+
+**PR fica no seu domínio.** Back commita em `<serviço>-api`, front em `<serviço>-web`, cada um
+com os docs de construção junto do código. O passo 5 executa os comandos de migração de tela
+**um por vez**, validando o resultado de cada etapa, conforme o guia do módulo na SayPlus.
 
 ### Trilha 4 · Sustentação
 
@@ -300,9 +321,19 @@ organizacional, vale para todas, e a constituição da sub-frente a herda e comp
 projeto para a pasta que contém o `.specify/`. Útil em automação. A seleção do projeto e a
 seleção da feature são eixos independentes.
 
-**Quando a sub-frente vira serviço:** na Trilha 2 o serviço nasce do archetype em repositório
-próprio, e os artefatos de `.specify/` da sub-frente são copiados para lá. A partir daí a
-feature seguinte daquele serviço roda no repositório dele.
+**Quando a sub-frente vira serviço:** na Trilha 2 o serviço nasce em um **container de três
+repositórios**, e os artefatos de produto de `.specify/` são copiados para o `-prod`:
+
+```text
+<serviço>/
+├── <serviço>-prod/   entregáveis de produto (Trilhas 0 e 1) + docs de referência
+├── <serviço>-api/    back: nascido de um dos archetypes; docs de back junto do código
+└── <serviço>-web/    front: convenções SayPlus + frontend-engineer.md; docs de front junto do código
+```
+
+A partir daí a feature seguinte roda no repositório do **domínio**: back em `-api`, front em
+`-web`, cada um com seus docs de construção junto do código. O `-prod` guarda o PRD e o que é
+fonte de verdade de produto.
 
 ---
 
@@ -394,7 +425,7 @@ nisso" não é critério. O critério é o arquivo.
 | `checklist` | feature de prioridade baixa, **a critério de produto**. Obrigatório em feature que toque dinheiro, dado de identidade ou comunicação com apostador | |
 | Trilha 2 inteira | o serviço já existe **e** o inventário de divergências está registrado | |
 | Escolha da variante | | ✱ erro aqui é retrabalho, não config |
-| `requirements.yaml` | | ✱ é o contrato com o SRE, não o pedido |
+| `requirements.yaml` / PR ao SRE | **adiado** enquanto local-first | ✱ quando o SRE reentra, é o contrato, não o pedido |
 | `plan` | | ✱ é o passo que impede cada projeto nascer de um jeito |
 | `tasks` | | ✱ |
 | `analyze` | menos de 20 tasks | |
@@ -412,7 +443,7 @@ Portão sem dono nomeado não é portão.
 |---|---|---|---|
 | `decide` | Etiene e Daniel, com operações | operações co-assina | quem propõe não assina sozinho |
 | `checklist` (aceite da spec) | produto | operações co-assina | quem escreve a spec não aceita sozinho |
-| `requirements.yaml` | tech lead | SRE aprova em PR | serviço não provisiona a própria infra |
+| `requirements.yaml` | tech lead | SRE aprova em PR | **adiado enquanto local-first**; serviço não provisiona a própria infra |
 | Constitution Check | agente declara | revisor humano confere | violação sem ADR não passa |
 | PR final | dev responsável | revisor humano | autor não aprova o próprio PR |
 
@@ -427,7 +458,11 @@ Modelo **spec-anchored**. Os artefatos **sobrevivem** à implementação e são 
 verdade para a mudança seguinte.
 
 - Requisito mudou? O artefato correspondente é atualizado **antes** do código.
-- A alteração do artefato entra no **mesmo PR** da mudança de código.
+- A alteração do artefato de construção entra no **mesmo PR** da mudança de código, **dentro do
+  seu domínio**: back em `-api`, front em `-web`. Com back e front em repositórios separados, o
+  "mesmo PR" vale por domínio, não cruzando repositório.
+- O artefato de produto (PRD, spec, desenho) é fonte de verdade em `-prod`; quando ele muda, a
+  mudança é referenciada no PR de código que a implementa.
 - Artefato desatualizado é **dívida** e é tratado como dívida.
 - É **PROIBIDO** tratar a especificação como andaime descartável.
 
@@ -443,7 +478,10 @@ especificação que ninguém manteve.
 | Constituição de Engenharia da Suprema | `CONSTITUICAO-ENGENHARIA.md` | engenharia, todo serviço backend |
 | Constituição deste serviço | `.specify/memory/constitution.md` | domínio, risco, regulatório |
 | Esteira de Criação Suprema | `LEIA-PRIMEIRO.md` | o processo, versão legível |
-| Archetype Backend NestJS | `rian-suprema/simplified-traditional-archetype` | golden path técnico |
+| Archetype simples (tradicional) | `rian-suprema/simplified-traditional-archetype` | golden path sem cache/mensageria |
+| Archetype completo (tradicional) | `rian-suprema/traditional-archetype` | golden path com cache/mensageria/HTTP externo |
+| Archetype completo (hexagonal) | `rian-suprema/layered-archetype` | golden path para domínio complexo, ports/adapters |
+| Sistema hospedeiro | `SupremaCO/sayplus` | onde cada módulo é abrigado |
 
 **Hierarquia em caso de conflito:** Constituição de Engenharia (em matéria de engenharia) →
 constituição do serviço (em matéria de domínio) → ADR do serviço → documento de feature.
@@ -470,5 +508,10 @@ dois gates acima são a defesa disponível.
 
 ---
 
-**Versão**: 0.1 rascunho | **Depende de**: Constituição de Engenharia da Suprema v1.0.0 ·
-Spec Kit v1.0.1 pinada | **Atualizado**: 2026-08-28
+**Versão**: 0.4 | **Depende de**: Constituição de Engenharia da Suprema v1.0.0 · Spec Kit v1.0.1
+pinada · Archetypes simplified-traditional / traditional / layered | **Atualizado**: 2026-09-17
+
+Nesta versão: Trilha 2 passa a **local-first** (SRE adiado), os **três archetypes** entram com
+matriz de escolha, e o **modelo de três repositórios** por serviço (`-prod` / `-api` / `-web`)
+com PR por domínio. Isso resolve o antigo `TODO(VARIANTE_COMPLETA)` da Constituição de
+Engenharia: a variante completa existe, em forma tradicional e hexagonal.
