@@ -20,13 +20,13 @@ sessão do agente. O resto desta página é o mapa, para você entender onde est
 
 ---
 
-## As quatro trilhas
+## As cinco trilhas
 
 ```
 TRILHA 0 · Descoberta      por ideia            produto + operações
 TRILHA 1 · Definição       por iniciativa       produto + operações
    ───────── aqui produto entrega para tecnologia ─────────
-TRILHA 2 · Nascimento      uma vez por serviço  tecnologia + SRE
+TRILHA 2 · Nascimento      uma vez por serviço  tecnologia (local-first; SRE depois)
 TRILHA 3 · Construção      por feature          tecnologia
 TRILHA 4 · Sustentação     contínuo             time do serviço
 ```
@@ -132,8 +132,10 @@ Não existe um arquivo único chamado PRD. Ele fica distribuído, e cada parte t
 | Item pronto para o backlog | `entregaveis/<PREFIXO>-NN.md` |
 | PRD consolidado, para circular | `PRD.md` |
 
-Todos ficam versionados no repositório do produto, ao lado do código que vier depois. É isso
-que faz o PRD continuar achável e verdadeiro seis meses depois.
+Todos ficam versionados no repositório de produto do serviço (o `<serviço>-prod`). O código
+vem depois, na Trilha 3, em repositórios de domínio separados (`<serviço>-api` para o back,
+`<serviço>-web` para o front). É esse conjunto de artefatos que faz o PRD continuar achável e
+verdadeiro seis meses depois.
 
 ---
 
@@ -179,7 +181,8 @@ descobre na prática o que a especificação esqueceu.
 - **O agente recusou um comando e citou um passo que falta.** Está correto. Faça o passo que
   falta.
 - **O agente quer discutir stack, banco ou arquitetura.** Está fora de escopo. A parte técnica
-  já está resolvida pelo Archetype Backend NestJS da Suprema. Redirecione.
+  já está resolvida pelos archetypes da Suprema (simples, completo tradicional e completo
+  hexagonal). Redirecione.
 - **O agente propôs escrever código.** Recuse. Código só acontece na Trilha 3, em outra sessão.
   A única exceção é o mockup do passo 10, que é HTML descartável dentro de `specs/<feature>/mockup/`.
 - **Você precisa fazer algo que a esteira não cobre.** Fale com Etiene ou Daniel antes de
@@ -188,5 +191,5 @@ descobre na prática o que a especificação esqueceu.
 
 ---
 
-**Versão** 0.1 · **Régua** Constituição de Engenharia da Suprema v1.0.0 · **Ferramenta** Spec Kit
+**Versão** 0.4 · **Régua** Constituição de Engenharia da Suprema v1.0.0 · **Ferramenta** Spec Kit
 pinado na tag indicada em `ESTEIRA.md`

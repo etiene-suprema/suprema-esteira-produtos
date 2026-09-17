@@ -50,8 +50,8 @@ REGRAS DESTA SESSÃO, sem exceção:
   specs/<feature>/mockup/, e que nunca é aproveitado na implementação.
 - NÃO execute /speckit-plan, /speckit-tasks nem /speckit-implement.
 - NÃO escolha, sugira ou discuta stack, banco, framework ou arquitetura. A parte
-  técnica já está resolvida pelo Archetype Backend NestJS da Suprema e não é
-  assunto desta sessão.
+  técnica já está resolvida pelos archetypes da Suprema e não é assunto desta
+  sessão.
 - A constituição do domínio vem ANTES da especificação, sempre. Ela trata de
   domínio, risco e regulatório, nunca de engenharia.
 - Pare em cada portão da esteira e peça minha confirmação antes de avançar.
@@ -61,8 +61,10 @@ REGRAS DESTA SESSÃO, sem exceção:
 - Ao fim de cada passo, diga qual arquivo foi criado e o que ficou pendente.
 
 NOTA DE HANDOFF: este repo é de trabalho de produto. Quando a Trilha 2 acontecer,
-o repositório do serviço nasce do archetype e os artefatos de .specify/ são
-copiados para lá. Não antecipe isso agora.
+o serviço nasce em três repositórios (<servico>-prod para produto, <servico>-api
+para o back nascido de um dos archetypes, <servico>-web para o front), rodando
+local-first, e os artefatos de produto de .specify/ são copiados para o -prod.
+Não antecipe isso agora.
 ```
 
 ---
