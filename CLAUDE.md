@@ -62,7 +62,7 @@ carregado. Não conduza trabalho de produto aqui.
 
 | Arquivo | Papel |
 |---|---|
-| `README.md` | a landing do repositório: por onde começar e o estado atual |
+| `README.md` | a landing do GitHub: espelha o mapa das trilhas do `LEIA-PRIMEIRO.md` |
 | `LEIA-PRIMEIRO.md` | entrada do time: o mapa das trilhas |
 | `PROMPT-NOVO-PRD.md` | prompt de copiar e colar para iniciar um PRD |
 | `ESTEIRA.md` | o processo. Vira o `CLAUDE.md` de cada projeto novo |
