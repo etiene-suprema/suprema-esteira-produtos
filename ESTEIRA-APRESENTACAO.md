@@ -221,10 +221,10 @@ tenant, contrato de erro, e se a spec resolve o problema descrito.
    (Entrega e Sustentação), portão de go-live disparado pelo primeiro PR aprovado da Trilha 3 e
    a cada mudança de `requirements.yaml`. Isso inverte o "não provisiona nada ainda" do seu
    guia; a intenção de provar local antes fica preservada. A cadência está boa?
-3. **Migração de telas.** Os comandos de migração do front, executados um a um pela SayPlus,
-   ficam melhor documentados onde: no `frontend-engineer.md` da SayPlus, no `-web`, ou no `-prod/docs`?
-4. **Dono de segurança.** A Constituição de Engenharia cita um responsável por segurança para
-   exceção de CVE e para emenda dos princípios de identidade, tenant e supply chain. Quem é?
+3. **Migração de telas — decidido.** Os comandos e notas de migração do front ficam versionados
+   no próprio `<serviço>-web`.
+4. **Dono de segurança — decidido.** É o **Rian**: aprova exceção de CVE e a emenda dos
+   Princípios II, III e VIII (identidade, tenant e supply chain).
 5. **Convenção de docs de construção.** Confirmado que ficam junto do código, no repo do
    domínio. Alguma estrutura mínima que você queira padronizar (pasta, índice)?
 

@@ -263,7 +263,8 @@ no primeiro go-live, não agora.
 
 **PR fica no seu domínio.** Back commita em `<serviço>-api`, front em `<serviço>-web`, cada um
 com os docs de construção junto do código. O passo 5 executa os comandos de migração de tela
-**um por vez**, validando o resultado de cada etapa, conforme o guia do módulo na SayPlus.
+**um por vez**, validando o resultado de cada etapa, conforme o guia do módulo na SayPlus. Os
+comandos e as notas de migração ficam versionados no próprio `<serviço>-web`.
 
 ### Trilha 4 · Entrega e Sustentação
 
@@ -459,6 +460,9 @@ Portão sem dono nomeado não é portão.
 
 Revisão humana verifica o que a ferramenta não vê: fronteira entre serviços, isolamento de
 tenant, contrato de erro, e se a especificação resolve o problema que foi descrito.
+
+**Dono de segurança: Rian.** Aprova exceção de CVE registrada e a emenda dos Princípios II, III
+e VIII da Constituição de Engenharia.
 
 ---
 
