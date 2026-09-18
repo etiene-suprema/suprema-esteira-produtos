@@ -1,12 +1,15 @@
 <!--
 Sync Impact Report
-- Mudança de versão: 1.0.0 → 1.1.0
-- Motivo do bump: MINOR. Confirmação dos repositórios das variantes do archetype e
-  introdução da variante completa **hexagonal** como opção do Golden Path (Princípio I).
-  Não altera nenhum princípio existente; amplia o Princípio I com a variante hexagonal.
-- Histórico: 1.0.0 (documento novo, MAJOR) adotou a constituição a partir das regras já em
-  vigor no Archetype Backend NestJS da Suprema, convertidas de prosa em princípios
-  declarativos e verificáveis.
+- Mudança de versão: 1.1.0 → 1.2.0
+- Motivo do bump: MINOR. Ampliação material do Fluxo de Desenvolvimento (portão de
+  convergência, item 5): o código passa a ser comparado também contra o **desenho** e os
+  **itens de entrega**, não só contra a especificação, o plano e as tasks. Acompanha o
+  redesenho da Trilha 1 (ESTEIRA.md v0.6), que fecha os seis gaps de rastreabilidade entre
+  produto e Engenharia. Não altera nenhum princípio existente.
+- Histórico: 1.1.0 (MINOR) confirmou os repositórios das variantes do archetype e introduziu a
+  variante completa **hexagonal** no Princípio I. 1.0.0 (documento novo, MAJOR) adotou a
+  constituição a partir das regras já em vigor no Archetype Backend NestJS da Suprema,
+  convertidas de prosa em princípios declarativos e verificáveis.
 - Princípios definidos (9):
   I.    Nasce do Archetype (Golden Path)
   II.   Identidade Delegada à Plataforma SayPlus
@@ -320,7 +323,10 @@ e consequências:
 4. **Implementação em ondas.** Feature grande MUST ser implementada por faixas de tarefas,
    não de uma vez.
 5. **Convergência antes do PR.** O código construído MUST ser comparado contra especificação,
-   plano e tasks, e o que faltar volta como tarefa. Repete-se até convergir.
+   **desenho e itens de entrega**, plano e tasks, e o que faltar volta como tarefa. Comparar só
+   contra a especificação em prosa deixa passar decisão de produto — estado de erro, permissão
+   por perfil, evento que alimenta a métrica —, que é o que o desenho e os itens carregam.
+   Repete-se até convergir.
 6. **PR barrado por gate automatizado**, sem exceção manual:
    - testes de arquitetura e de negócio verdes;
    - limites do Princípio IX respeitados;
@@ -377,4 +383,4 @@ até um ciclo de planejamento, o inventário das divergências e o plano de conv
 Divergência conhecida e registrada é dívida gerenciada. Divergência não registrada é
 violação.
 
-**Version**: 1.1.0 | **Ratified**: 2026-08-27 | **Last Amended**: 2026-09-17
+**Version**: 1.2.0 | **Ratified**: 2026-08-27 | **Last Amended**: 2026-09-18

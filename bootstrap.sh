@@ -55,9 +55,9 @@ printf '.claude/\n.DS_Store\n' > .gitignore
 SKILLS="$(find .claude/skills -maxdepth 1 -mindepth 1 -type d | wc -l | tr -d ' ')"
 echo
 echo "▸ Pronto. Projeto em: $DESTINO"
-echo "  skills instaladas: $SKILLS (esperado: 21)"
-if [[ "$SKILLS" != "21" ]]; then
-  echo "  AVISO: contagem diferente de 20. Confira se as três extensões instalaram." >&2
+echo "  skills instaladas: $SKILLS (esperado: 23)"
+if [[ "$SKILLS" != "23" ]]; then
+  echo "  AVISO: contagem diferente de 23. Confira se as três extensões instalaram." >&2
 fi
 echo
 echo "Próximos passos:"

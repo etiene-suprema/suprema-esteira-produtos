@@ -2,13 +2,18 @@
 description: "Gera um mockup HTML navegável do desenho e conduz a entrevista de validação, devolvendo o que emergir para a especificação"
 ---
 
-# Mockup navegável de validação
+# Validar (mockup navegável, ou conferência de contrato)
 
-Produz `specs/<feature>/mockup/index.html`: um mockup **navegável e descartável** do produto
-desenhado, e conduz a entrevista que confirma se o entendimento está certo. É o passo 5 da
-Trilha 1 da Esteira de Criação Suprema.
+É o passo 7 da Trilha 1 da Esteira de Criação Suprema, e a validação tem **duas formas conforme o
+tipo de produto** declarado no desenho:
 
-O mockup existe por dois motivos, nesta ordem:
+- **Interface** (web, app, back-office): produz `specs/<feature>/mockup/index.html`, um mockup
+  **navegável e descartável**, e conduz a entrevista. É o corpo deste comando.
+- **Jogo**: **não há mockup HTML**. A validação é a **conferência do contrato de evento** contra o
+  contrato vigente do RGS. Ver a seção "Produto de jogo" mais abaixo. É o entregável que a
+  tecnologia consome, e por isso ele, não a tela, é o que se valida.
+
+Para produto de interface, o mockup existe por dois motivos, nesta ordem:
 
 1. **Provar entendimento.** Ver a tela revela divergência que o texto esconde. Se o mockup
    estiver errado, o desenho estava errado, e é mais barato descobrir agora.
@@ -41,7 +46,7 @@ Escreva estas regras no topo do arquivo gerado, como comentário, e obedeça a t
 
 1. Rode `.specify/scripts/bash/check-prerequisites.sh --json` e leia os caminhos.
 2. `spec.md` e `desenho.md` MUST existir. Se `desenho.md` não existir, **pare** e diga que o
-   passo 4 (`/speckit-produto-desenho`) ainda não aconteceu. Sem ele não há o que mockar.
+   passo 6 (`/speckit-produto-desenho`) ainda não aconteceu. Sem ele não há o que mockar.
 3. `desenho.md` MUST estar com `**Status**: aprovado` no cabeçalho. Se estiver como `proposta`,
    **pare** e diga que o desenho ainda está em iteração: mockar proposta que vai mudar é
    desperdício de trabalho seu e de atenção do usuário. Volte para `/speckit-produto-desenho`.
@@ -98,10 +103,33 @@ compartilhar com o time. Informe o link.
 Se a publicação não estiver disponível no ambiente, informe o caminho local do arquivo e como
 abrir no navegador.
 
+## Produto de jogo: conferência do contrato de evento
+
+Se o tipo declarado no `desenho.md` for **Jogo**, pule a construção do HTML acima. A validação é
+documental e confronta o contrato de evento do desenho (seção J2) com o **contrato vigente do
+RGS** (`spin_event.v1` em `TECH_DESIGN.md` §4, schema em `DATA_SPEC-analytics.md`). Localize esses
+arquivos no repositório do jogo; se não achar, **pergunte o caminho**, nunca invente campo.
+
+Produza `specs/<feature>/validacao-contrato.md` respondendo:
+
+- **Cada evento e campo do desenho existe no contrato vigente?** Aponte o que casa e o que diverge.
+- **Há valor novo em enum fechado** (`action`, `feature_type`, `reject_reason`)? Se sim, é
+  **mudança de contrato**, sujeita à disciplina de versão: se o `v1` já emitiu em produção, vira
+  `v2`.
+- **Cada métrica do `spec.md` é servida pelo contrato?** Uma de três respostas por métrica: serve
+  (aponte o campo), é dimensão (onde vive, join por qual chave), ou falta stream (o achado caro).
+
+A entrevista abaixo, adaptada, também vale para jogo: troque "telas" por "eventos e métricas". O
+bloco 5 (a ideia nova) continua obrigatório.
+
+> **[A DEFINIR] — decisão de processo pendente:** o anexo de arquitetura registra que a validação
+> por contrato precisa do **aval de quem responde pelo contrato de evento**. Enquanto esse dono não
+> for nomeado, registre a conferência mesmo assim e marque o aprovador como `[INDEFINIDO]`.
+
 ## A entrevista de validação
 
-Este é o coração do passo. Depois de entregar o mockup, conduza a conversa nesta ordem, em
-blocos, esperando resposta a cada bloco:
+Este é o coração do passo. Depois de entregar o mockup (interface) ou a conferência de contrato
+(jogo), conduza a conversa nesta ordem, em blocos, esperando resposta a cada bloco:
 
 **Bloco 1 — o que está errado.**
 "Alguma tela não é o que você quis dizer? Alguma coluna, botão ou filtro está sobrando ou
@@ -151,7 +179,8 @@ Se a entrevista mudou o desenho, atualize `desenho.md`, **regere o mockup** e ro
 de novo, mais curta, só nos pontos alterados. Repita até a pessoa dizer que o mockup representa
 o produto que ela quer.
 
-Só então ofereça o passo seguinte: `/speckit-checklist`, o portão de aceite da Trilha 1.
+Só então ofereça o passo seguinte: `/speckit-produto-compilar` (passo 8), que gera os itens de
+entrega e o PRD antes do portão de aceite.
 
 ## Ao terminar
 

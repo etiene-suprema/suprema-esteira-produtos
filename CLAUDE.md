@@ -33,7 +33,7 @@ repositório foi clonado:
 
 Ele instala a CLI do Spec Kit **pinada na tag**, cria o projeto como diretório **irmão** deste,
 instala as três extensões da esteira (`assess`, `bug`, `produto`), copia `ESTEIRA.md` como
-`CLAUDE.md` no projeto novo e valida a contagem de 20 skills.
+`CLAUDE.md` no projeto novo e valida a contagem de 23 skills.
 
 Se o script falhar, os passos manuais equivalentes estão na seção 1 de `ESTEIRA.md`. Não
 improvise uma sequência diferente.
@@ -62,11 +62,13 @@ carregado. Não conduza trabalho de produto aqui.
 
 | Arquivo | Papel |
 |---|---|
+| `README.md` | a landing do GitHub: espelha o mapa das trilhas do `LEIA-PRIMEIRO.md` |
 | `LEIA-PRIMEIRO.md` | entrada do time: o mapa das trilhas |
 | `PROMPT-NOVO-PRD.md` | prompt de copiar e colar para iniciar um PRD |
 | `ESTEIRA.md` | o processo. Vira o `CLAUDE.md` de cada projeto novo |
-| `CONSTITUICAO-ENGENHARIA.md` | os 9 princípios de engenharia, v1.0.0 |
-| `extension-produto/` | extensão própria: passos 4 e 5 da Trilha 1 |
+| `CONSTITUICAO-ENGENHARIA.md` | os 9 princípios de engenharia, v1.2.0 |
+| `ESTEIRA-APRESENTACAO.md` | apresentação da esteira para arquitetura |
+| `extension-produto/` | extensão própria: passos 2, 3, 6, 7 e 8 da Trilha 1 |
 | `bootstrap.sh` | cria e configura um projeto novo |
 
 O código da ferramenta **não** vive aqui. A CLI vem da tag pinada, baixada no bootstrap.
