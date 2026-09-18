@@ -72,6 +72,10 @@ ideia com motivo escrito é resultado, não fracasso. Tudo em `.specify/assessme
 O portão pontua sempre os **mesmos quatro critérios**: impacto, esforço, risco regulatório,
 reversibilidade. Veredicto `seguir`, `esclarecer` ou `matar`. Só `seguir` avança.
 
+Exceção autorizada: quando o `shape` não fecha sem uma resposta que só o código dá, roda-se um
+**spike** (pergunta escrita, prazo, saída registrada, código descartável). É o único caso em que
+se toca tecnologia antes da Trilha 2.
+
 ---
 
 ## 5 · Trilha 1 · Definição do produto
@@ -86,7 +90,8 @@ concreto tela por tela, antes de qualquer linha de código.
 | 3 | Clarificar | `/speckit-clarify` | `spec.md` atualizado | resolve as indefinições antes de desenhar |
 | 4 | **Propor e aprovar a superfície** | `/speckit-produto-desenho` | `desenho.md` | perfis, navegação, telas, ações, estados de vazio e erro, notificações, eventos a medir |
 | 5 | **Mockup de validação** | `/speckit-produto-mockup` | `mockup/index.html` | HTML descartável, prova o entendimento e gera ideia nova |
-| 6 | **Portão: checklist e aceite** | `/speckit-checklist` | `checklist.md` | fronteira com tecnologia |
+| 6 | **Compilar a entrega** | `/speckit-produto-compilar` | `entregaveis/`, `PRD.md` | itens autossuficientes para o backlog + PRD consolidado, gerados, nunca editados à mão |
+| 7 | **Portão: checklist e aceite** | `/speckit-checklist` | `checklists/` | fronteira com tecnologia |
 
 Por que a constituição vem antes da spec: ela carrega a régua de domínio. Especificar primeiro
 produz requisito que viola a própria régua, e a violação só apareceria semanas depois, com o
@@ -97,14 +102,19 @@ desenho completo, marcando `[SUPOSTO]` no que deduziu e `[INDEFINIDO]` no que n�
 Reagir a uma proposta custa uma fração de responder quarenta perguntas. O mockup é
 **descartável**: nada dele entra no código, que nasce do archetype na Trilha 3.
 
+O passo 6 compila tudo em **itens prontos para o backlog** (um arquivo por história ou task) mais
+o **PRD consolidado**. Os dois são gerados da spec e do desenho, nunca editados à mão: mudou o
+artefato, roda de novo. Se o produto é um **jogo**, o passo 4 troca o conjunto de seções e o
+entregável para tecnologia passa a ser o **contrato de evento**, não o menu.
+
 ---
 
 ## 6 · Trilha 2 · Nascimento do serviço (local-first)
 
 Aqui o produto aprovado vira um serviço de pé na máquina do desenvolvedor. **A Trilha 2 é 100%
 local, sem SRE.** O archetype já foi feito para isso, sobe inteiro com `docker compose` (Postgres,
-Redis, LocalStack) e roda os mesmos gates do CI localmente. O provisionamento com SRE fica na
-Trilha 4 (go-live).
+mais Redis e LocalStack na variante completa) e roda os mesmos gates do CI localmente. O
+provisionamento com SRE fica na Trilha 4 (go-live).
 
 | # | Passo | Artefato / prova | Contexto |
 |---|---|---|---|
