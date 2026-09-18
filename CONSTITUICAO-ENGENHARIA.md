@@ -1,10 +1,12 @@
 <!--
 Sync Impact Report
-- Mudança de versão: (documento novo) → 1.0.0
-- Motivo do bump: MAJOR. Adoção inicial da constituição de engenharia organizacional.
-- Origem: regras já em vigor no Archetype Backend NestJS da Suprema
-  (rian-suprema/simplified-traditional-archetype), convertidas de prosa em
-  princípios declarativos e verificáveis.
+- Mudança de versão: 1.0.0 → 1.1.0
+- Motivo do bump: MINOR. Confirmação dos repositórios das variantes do archetype e
+  introdução da variante completa **hexagonal** como opção do Golden Path (Princípio I).
+  Não altera nenhum princípio existente; amplia o Princípio I com a variante hexagonal.
+- Histórico: 1.0.0 (documento novo, MAJOR) adotou a constituição a partir das regras já em
+  vigor no Archetype Backend NestJS da Suprema, convertidas de prosa em princípios
+  declarativos e verificáveis.
 - Princípios definidos (9):
   I.    Nasce do Archetype (Golden Path)
   II.   Identidade Delegada à Plataforma SayPlus
@@ -20,10 +22,11 @@ Sync Impact Report
 - Nota de idioma: o corpo é redigido em pt-BR; os títulos estruturais
   `## Core Principles` e `## Governance` permanecem no texto canônico do
   template para que as ferramentas do Spec Kit continuem a localizá-los.
-- TODOs pendentes:
-  - TODO(VARIANTE_COMPLETA): confirmar o repositório oficial da variante
-    completa do archetype (petstore-api). Bloqueante para qualquer serviço
-    que exija cache, mensageria ou HTTP externo.
+- TODOs pendentes: nenhum.
+  - RESOLVIDO em 1.1.0 — TODO(VARIANTE_COMPLETA): a variante completa existe em duas
+    formas, `rian-suprema/traditional-archetype` (tradicional em camadas) e
+    `rian-suprema/layered-archetype` (hexagonal); a simples é
+    `rian-suprema/simplified-traditional-archetype`.
 -->
 
 # Constituição de Engenharia da Suprema
@@ -51,8 +54,11 @@ não é decisão de feature nem de preferência de time.
 **Escolha da variante** MUST ser decidida antes da primeira linha de código, pelo critério:
 
 - o domínio precisa de **cache distribuído, mensageria ou cliente HTTP externo**?
-  - **Não** → variante **simples**
-  - **Sim** → variante **completa**
+  - **Não** → variante **simples**: `rian-suprema/simplified-traditional-archetype`
+  - **Sim** → variante **completa**, em uma de duas formas:
+    - **tradicional em camadas** (padrão): `rian-suprema/traditional-archetype`
+    - **hexagonal** (ports/adapters), quando o domínio é complexo, com muita regra ou
+      integração isolável: `rian-suprema/layered-archetype`
 
 Errar essa escolha não é ajuste de configuração: a variante simples carrega um gate de
 arquitetura que **derruba o build** ao encontrar import de cache, mensageria ou HTTP
@@ -283,8 +289,9 @@ realiza** via IaC. Nenhum serviço provisiona infraestrutura por conta própria.
 **Registro no catálogo:** todo serviço MUST estar registrado no catálogo da plataforma, com
 **owner sendo um grupo real**, nunca uma pessoa.
 
-**Variante completa:** TODO(VARIANTE_COMPLETA) confirmar o repositório oficial. Bloqueante
-para qualquer serviço que exija cache, mensageria ou HTTP externo.
+**Variantes do archetype:** simples em `rian-suprema/simplified-traditional-archetype`; completa
+em `rian-suprema/traditional-archetype` (tradicional em camadas) ou
+`rian-suprema/layered-archetype` (hexagonal). A escolha segue o critério do Princípio I.
 
 ## Decisões que Exigem ADR
 
@@ -370,4 +377,4 @@ até um ciclo de planejamento, o inventário das divergências e o plano de conv
 Divergência conhecida e registrada é dívida gerenciada. Divergência não registrada é
 violação.
 
-**Version**: 1.0.0 | **Ratified**: 2026-08-27 | **Last Amended**: 2026-08-27
+**Version**: 1.1.0 | **Ratified**: 2026-08-27 | **Last Amended**: 2026-09-17
