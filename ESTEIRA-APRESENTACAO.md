@@ -4,8 +4,8 @@ Documento de apresentação para arquitetura. Explica o processo completo pelo q
 serviço nascem na Suprema, o contexto de cada trilha e o que muda com a decisão de rodar
 **local-first**.
 
-> **Status**: proposta para revisão do arquiteto. Os pontos que dependem de decisão sua estão
-> reunidos na última seção.
+> **Status**: versão para apresentação. As decisões desta revisão estão consolidadas na última
+> seção; dois pontos ficam a ratificar com engenharia.
 
 ---
 
@@ -196,6 +196,16 @@ Consequência sobre o spec-anchored: como back e front vivem em repos separados,
 código com o artefato vale **dentro de cada domínio**. O PR de back atualiza os docs de back no
 mesmo PR, o de front idem. O `-prod` guarda o PRD e os docs de referência.
 
+Os docs de construção seguem um **padrão fixo** em cada repo de domínio, igual em todo serviço:
+
+```
+<serviço>-api/docs/            (idem em <serviço>-web/docs/)
+├── README.md      índice
+├── plan.md
+├── tasks.md
+└── adr/0001-*.md  decisões de arquitetura
+```
+
 ---
 
 ## 11 · Portões e assinatura
@@ -213,22 +223,22 @@ tenant, contrato de erro, e se a spec resolve o problema descrito.
 
 ---
 
-## 12 · Pontos abertos que dependem de você
+## 12 · Decisões desta revisão
 
-1. **Critério tradicional vs hexagonal.** Proposta: hexagonal quando o domínio é complexo com
-   muita regra ou integração isolável; tradicional no resto. Confirma ou ajusta?
-2. **Reentrada do SRE (decidido, confirme).** O provisionamento é o passo 1 da Trilha 4
-   (Entrega e Sustentação), portão de go-live disparado pelo primeiro PR aprovado da Trilha 3 e
-   a cada mudança de `requirements.yaml`. Isso inverte o "não provisiona nada ainda" do seu
-   guia; a intenção de provar local antes fica preservada. A cadência está boa?
-3. **Migração de telas — decidido.** Os comandos e notas de migração do front ficam versionados
-   no próprio `<serviço>-web`.
-4. **Dono de segurança — decidido.** É o **Rian**: aprova exceção de CVE e a emenda dos
-   Princípios II, III e VIII (identidade, tenant e supply chain).
-5. **Convenção de docs de construção.** Confirmado que ficam junto do código, no repo do
-   domínio. Alguma estrutura mínima que você queira padronizar (pasta, índice)?
+1. **Trilha 2 local-first.** O serviço nasce e é provado na máquina; o SRE não entra na Trilha 2.
+2. **Provisionamento na Trilha 4.** É o passo 1 (go-live), disparado pelo primeiro PR aprovado
+   da Trilha 3 e a cada mudança de `requirements.yaml`.
+3. **Três archetypes** com matriz de escolha; tradicional vs hexagonal pelo critério de
+   complexidade do domínio (hexagonal quando há muita regra ou integração isolável).
+4. **Modelo de três repositórios** por serviço (`-prod` / `-api` / `-web`), PR por domínio, com
+   `docs/` em padrão fixo nos repos de código. Migração de telas do front versionada no `-web`.
+5. **Dono de segurança: Rian.** Aprova exceção de CVE e a emenda dos Princípios II, III e VIII.
+
+A ratificar com engenharia (Rian), caso ele queira ajustar: o critério tradicional vs hexagonal
+e a cadência de reentrada do SRE. Ambos já estão escritos no `ESTEIRA.md` e na Constituição de
+Engenharia (1.1.0).
 
 ---
 
-**Versão** rascunho para revisão · **Régua** Constituição de Engenharia da Suprema v1.0.0 ·
+**Versão** final para apresentação · **Régua** Constituição de Engenharia da Suprema v1.1.0 ·
 **Ferramenta** Spec Kit v1.0.1 pinada · Archetypes: simplified-traditional, traditional, layered

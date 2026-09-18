@@ -346,6 +346,17 @@ A partir daí a feature seguinte roda no repositório do **domínio**: back em `
 `-web`, cada um com seus docs de construção junto do código. O `-prod` guarda o PRD e o que é
 fonte de verdade de produto.
 
+Os docs de construção seguem um **padrão fixo** em cada repo de domínio, para que todo serviço
+fique igual:
+
+```text
+<serviço>-api/docs/            (idem em <serviço>-web/docs/)
+├── README.md      índice
+├── plan.md
+├── tasks.md
+└── adr/0001-*.md  decisões de arquitetura
+```
+
 ---
 
 ## 4 · Regras de bloqueio (a parte que morde)
