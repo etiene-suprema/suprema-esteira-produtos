@@ -56,10 +56,11 @@ specify extension add "$ESTEIRA_DIR"/extension-produto --dev
 - **`assess`** entrega a Trilha 0. Sem ela, os comandos `/speckit-assess-*` não existem e a
   trilha de descoberta não tem como rodar.
 - **`bug`** entrega a Trilha 4. Sem ela, correção de bug não tem caminho e vira commit avulso.
-- **`produto`** entrega os passos 4, 5 e 6 da Trilha 1: a proposta da superfície do produto, o
-  mockup de validação e a compilação da entrega. É extensão da própria Suprema, por isso instala de diretório local com
-  `--dev`, apontando para a pasta `extension-produto` deste repositório. Sem ela, o PRD
-  sai sem tela, sem menu e sem botão, e o produto só vira concreto na mão do desenvolvedor.
+- **`produto`** entrega os passos 2, 3, 6, 7 e 8 da Trilha 1: perfis e atores, histórias, a
+  proposta da superfície do produto, a validação (mockup) e a compilação da entrega. É extensão da
+  própria Suprema, por isso instala de diretório local com `--dev`, apontando para a pasta
+  `extension-produto` deste repositório. Sem ela, o PRD sai sem ator, sem história padronizada e
+  sem tela, e o produto só vira concreto na mão do desenvolvedor.
 
 Em CI ou sessão sem teclado, acrescente `--non-interactive` ao `init`. Para inicializar dentro
 de diretório que já tem arquivos, acrescente `--force`.
@@ -70,7 +71,7 @@ de diretório que já tem arquivos, acrescente `--force`.
 <projeto>/
 ├── CLAUDE.md                      ← este arquivo, copiado do template
 ├── .gitignore                     ← inclui .claude/ e .DS_Store
-├── .claude/skills/                ← 21 skills (10 core + 5 assess + 3 bug + 3 produto)
+├── .claude/skills/                ← 23 skills (10 core + 5 assess + 3 bug + 5 produto)
 └── .specify/
     ├── memory/constitution.md     ← ainda com placeholder neste momento
     ├── templates/                 ← 5 templates
@@ -82,7 +83,7 @@ de diretório que já tem arquivos, acrescente `--force`.
     └── workflows/speckit/
 ```
 
-Confira a contagem de skills antes de começar (esperado: 21):
+Confira a contagem de skills antes de começar (esperado: 23):
 
 ```bash
 ls .claude/skills | wc -l
@@ -160,62 +161,100 @@ que são os que mais precisavam de registro. Nomear custa meia página e fecha o
 
 ### Trilha 1 · Definição do produto
 
+Nenhuma trilha foi criada, removida ou reordenada. A Trilha 1 passa a ter **nove passos**: dois
+**novos** (perfis e atores, e histórias) e quatro **ampliados** (desenho, validar, compilar e o
+portão). O que muda fecha os seis gaps de rastreabilidade entre produto e Engenharia.
+
 | # | Passo | Comando | Artefato |
 |---|---|---|---|
 | 1 | **Constituição do domínio** | `/speckit-constitution` | `.specify/memory/constitution.md` |
-| 2 | Especificar | `/speckit-specify` | `specs/NNN-nome/spec.md` |
-| 3 | Clarificar | `/speckit-clarify` | `spec.md` atualizado |
-| 4 | **Propor e aprovar a superfície do produto** | `/speckit-produto-desenho` | `desenho.md` |
-| 5 | **Mockup navegável de validação** | `/speckit-produto-mockup` | `mockup/index.html` |
-| 6 | **Compilar a entrega** | `/speckit-produto-compilar` | `entregaveis/`, `PRD.md` |
-| 7 | **Portão: checklist e aceite** | `/speckit-checklist` | `checklists/` |
+| 2 | **Perfis e atores** · novo | `/speckit-produto-perfis` | `specs/NNN-nome/perfis.md` |
+| 3 | **Histórias** · novo | `/speckit-produto-historias` | `specs/NNN-nome/historias.md` |
+| 4 | Especificar | `/speckit-specify` | `spec.md` |
+| 5 | Clarificar | `/speckit-clarify` | `spec.md` atualizado |
+| 6 | **Desenho da superfície** · ampliado | `/speckit-produto-desenho` | `desenho.md` |
+| 7 | **Validar** · ampliado | `/speckit-produto-mockup` (tela) · conferência de contrato (jogo) | `mockup/index.html` ou nota de conferência |
+| 8 | **Compilar a entrega** · ampliado | `/speckit-produto-compilar` | `entregaveis/`, `PRD.md` |
+| 9 | **Portão: checklist e aceite** · ampliado | `/speckit-checklist` | `checklists/` |
 
-A constituição vem **antes** da especificação, sempre. Ela contém as restrições de domínio,
-risco e regulatório. Especificar primeiro produz requisito que viola a própria régua, e a
-violação só aparece na Trilha 3, com a spec já aprovada.
+A constituição vem **antes** de tudo, sempre. Ela contém as restrições de domínio, risco e
+regulatório. Especificar sobre uma régua que ainda não existe produz requisito que nasce ilegal,
+e a violação só aparece na Trilha 3, com a spec já aprovada.
 
-Os passos 4 e 5 são o **produto concreto**. A especificação diz o que o produto faz; o desenho
-diz como a pessoa usa: menus, telas, colunas, botões, filtros, estados de erro e de vazio,
-permissões por perfil, notificações, o que muda por marca, e que evento precisa ser medido em
-cada tela. Sem eles o PRD termina abstrato e as decisões de produto acabam sendo tomadas por
-quem implementa.
+**Os passos 2 e 3, os dois novos, são o ponto mais estreito da esteira: tudo o que vem depois
+herda a qualidade do que sai deles.**
 
-O método do passo 4 é **proposta primeiro, não entrevista**. O agente lê os artefatos da Trilha
-0, a constituição e a especificação, e escreve um desenho completo. Reagir a uma proposta
-concreta custa uma fração do que responder a quarenta perguntas abertas. Para isso não virar
-ancoragem, ele MUST marcar `[SUPOSTO]` em tudo que deduziu e `[INDEFINIDO]` no que não conseguiu
-supor: o que fica sem marca precisa ser rastreável a um artefato. Assim você varre só as
-suposições em vez de reler tudo.
+- **Perfis e atores (passo 2).** Lista quem usa o produto e o que cada um pode ver e fazer,
+  incluindo **operação, suporte e back-office**, que são os perfis sempre esquecidos. Vem antes
+  da história porque história sem ator definido é história sem dono. A tabela de perfis **sai do
+  desenho** e passa a nascer aqui; o desenho (passo 6) apenas a consome.
+- **Histórias (passo 3).** É onde a história de usuário **nasce**, com **formato único, critério
+  de tamanho e régua de prioridade**: o que faz algo ser P1, quem decide, e o que essa marca
+  obriga adiante (P1 força a validação por mockup e aparece nos itens de entrega). Antes deste
+  passo a história nascia por hábito, sem padrão.
 
-O desenho itera em rodadas até a **aprovação explícita**, gravada no cabeçalho do arquivo como
-`**Status**: aprovado`. O passo 5 só roda depois disso, porque mockar proposta que vai mudar é
-desperdício.
+O passo 4 (**especificar**) converte as histórias do passo 3 em **requisitos numerados**, cada
+um com critério de aceite e métrica de sucesso, sempre sobre o **quê** e o **porquê**, nunca
+tecnologia. O passo 5 (**clarificar**) fecha o que ficou em aberto; marca visível é recurso, não
+falha, e nada avança com lacuna escondida.
 
-O passo 5 tem duas funções, nesta ordem: **provar entendimento** (ver a tela revela divergência
-que o texto esconde) e **gerar ideia** (quem vê a tela pensa em coisa nova). O que emergir na
-entrevista do mockup volta para `desenho.md` e para `spec.md`, em vez de virar pedido solto
-depois.
+O passo 6 (**desenho**) é o **produto concreto**, tela por tela: menus, colunas, botões, filtros,
+estados de vazio e de erro, o que muda por marca, e que evento precisa ser medido para cada
+métrica ser verificável. O método é **proposta primeiro, não entrevista**: o agente lê os
+artefatos, a constituição e a especificação e escreve um desenho completo, marcando `[SUPOSTO]`
+no que deduziu e `[INDEFINIDO]` no que não soube supor; o que fica sem marca é rastreável a um
+artefato. Itera em rodadas até a **aprovação explícita**, gravada como `**Status**: aprovado`.
 
-O mockup é **descartável**: HTML e CSS puros, dado fictício, nunca aproveitado no código. A
-construção acontece a partir do archetype, na Trilha 3.
+O desenho passa a entregar **duas coisas novas**, ambas fatos de negócio, sem tecnologia:
 
-O passo 4 escolhe o **conjunto de seções pelo tipo de produto**. Interface (web, app,
-back-office) usa perfis, navegação, telas, estados e permissões. **Jogo** usa contrato de
-evento, estados de rodada, regras de aposta, integração de carteira, jogo responsável e
-auditoria, e só então as telas mínimas. Em jogo, menu é quase irrelevante: o entregável do
-upstream para tecnologia é o **contrato de evento**, e ele não é inventado, é validado contra o
-contrato vigente do RGS.
+- **Matriz de permissões no formato da plataforma** (SayPlus): cada permissão no padrão
+  `modulo.recurso.acao`, com os verbos `read | create | edit | delete`, pronta para o registro no
+  catálogo que o Princípio II exige. É o que faz permissão e segurança deixarem de cruzar a
+  fronteira sem dono.
+- **Sinais de comportamento do produto**: avisa por notificação, depende de outro sistema, tem
+  volume alto, roda em horário. São a **evidência escrita** que embasa a escolha da variante do
+  archetype na Trilha 2, hoje feita sem registro.
 
-O passo 6 resolve a **fragmentação**. Os artefatos anteriores são o raciocínio e a fonte de
-verdade, mas a unidade de execução é o item: uma história, um épico, uma task, que viaja sozinha
-para o backlog. A compilação gera **um arquivo autossuficiente por item** (contexto, requisito,
-critérios de aceite, métricas que move, recorte do desenho, dependências, fase) mais o **PRD
-consolidado** no formato da Suprema. As duas saídas são **geradas, nunca editadas à mão**:
-quando a especificação ou o desenho mudarem, o comando roda de novo e regera.
+O passo 7 (**validar**) prova o entendimento e gera ideia nova. Para produto de **tela**, gera um
+mockup navegável e conduz a entrevista: é onde aparece a divergência que o texto esconde e a
+ideia que ninguém escreveu. Para **jogo**, o equivalente é a **conferência do contrato de evento**
+contra o que já está valendo, porque em jogo é o contrato, e não o menu, que a tecnologia consome.
+O mockup é **descartável**: HTML e CSS puros, dado fictício, nunca aproveitado no código, que
+nasce do archetype na Trilha 3.
 
-Requisito é numerado **por subsistema**, não global: o prefixo diz quem é o dono e é o que faz o
-item ser roteável para a sub-frente certa. Exemplo real do Projeto Selva: `C-` cliente do jogo,
-`S-` servidor, `I-` integração com operadores, `A-` painel administrativo.
+O passo 8 (**compilar**) resolve a **fragmentação**. **Unidade de execução, definição única (é
+esta a régua, não há outra):** o **item de entrega** é a unidade que viaja sozinha para o backlog;
+a história e o requisito são os insumos que o originam. Cada item passa a carregar, em campo
+próprio, a **história e o requisito de origem**, para a rastreabilidade não se perder no caminho.
+A compilação gera **um arquivo autossuficiente por item** (contexto, requisito, origem, critérios
+de aceite, métricas que move, recorte do desenho, dependências, fase) mais o **PRD consolidado**.
+As duas saídas são **geradas, nunca editadas à mão**: mudou a especificação ou o desenho, roda de
+novo e regera. A **granularidade** do item — um por requisito ou um por história — é decisão de
+processo pendente (ver o bloco de decisões abaixo); até fechar, a compilação gera um por requisito
+com o campo de origem apontando a história.
+
+Requisito é numerado **por subsistema**, não global: o prefixo diz o dono e roteia o item para a
+sub-frente certa. Exemplo real do Projeto Selva: `C-` cliente do jogo, `S-` servidor, `I-`
+integração com operadores, `A-` painel administrativo.
+
+O passo 9 (**portão de fronteira**) é o aceite, e é a única passagem para tecnologia. Passa de
+duas para **quatro assinaturas**: produto, operações, o **tech lead** que vai receber o trabalho,
+e **segurança** quando a feature toca dinheiro, dado de identidade ou comunicação com apostador.
+
+> **Cinco decisões de processo a fechar antes da adoção plena** (do anexo de arquitetura). Não
+> criam trilha nem bloqueiam desenhar; são governança, e ficam marcadas como pendência até
+> alguém assinar:
+> 1. **Dono da régua de prioridade.** O que torna uma história P1 e quem assina. Sem esse nome, o
+>    passo 3 nasce sem autoridade.
+> 2. **Granularidade do item de entrega:** um por requisito ou um por história. Muda o formato do
+>    backlog inteiro e se decide uma vez.
+> 3. **Quem registra as permissões na plataforma.** A régua exige registro antes do uso, e nenhum
+>    passo tem esse dono hoje.
+> 4. **Validação equivalente ao mockup em produto de jogo.** A proposta é a conferência do
+>    contrato de evento; precisa de aval de quem responde pelo contrato.
+> 5. **Se a variante hexagonal exige decisão registrada sempre.** As duas primeiras linhas da
+>    matriz de escolha têm gate automático; a terceira depende de julgamento, e julgamento sem
+>    registro não é verificável.
 
 ### Trilha 2 · Nascimento do serviço (local-first)
 
@@ -370,9 +409,11 @@ Informe qual passo falta e pare.
 | `/speckit-assess-shape` | `problem.md` existe | rode `define` primeiro |
 | `/speckit-assess-decide` | `problem.md` existe; veredicto `seguir` exige `concept.md` | rode `define` e `shape` |
 | `/speckit-constitution` | nenhuma | — |
-| `/speckit-specify` | `decision.md` com veredicto `seguir` **e** `constitution.md` sem placeholder | falta a Trilha 0 ou a constituição |
+| `/speckit-produto-perfis` | `decision.md` com veredicto `seguir` **e** `constitution.md` sem placeholder | falta a Trilha 0 ou a constituição |
+| `/speckit-produto-historias` | `perfis.md` existe | rode `produto-perfis` |
+| `/speckit-specify` | `historias.md` existe, `decision.md` com veredicto `seguir` **e** `constitution.md` sem placeholder | falta perfis, histórias, a Trilha 0 ou a constituição |
 | `/speckit-clarify` | `spec.md` existe | rode `specify` |
-| `/speckit-produto-desenho` | `spec.md` existe | rode `specify` |
+| `/speckit-produto-desenho` | `spec.md` existe e `perfis.md` existe | rode `specify` e `produto-perfis` |
 | `/speckit-produto-mockup` | `desenho.md` com `**Status**: aprovado` no cabeçalho | o desenho ainda está em iteração |
 | `/speckit-produto-compilar` | `desenho.md` com `**Status**: aprovado` | o desenho ainda está em iteração |
 | `/speckit-checklist` | `spec.md`, `desenho.md` e `entregaveis/` existem | falta especificar, desenhar ou compilar |
@@ -392,7 +433,7 @@ vazio) são responsabilidade sua, agente, e MUST ser conferidas lendo o arquivo.
    rápido", "muda só essa linha" ou "faz direto que é simples" MUST ser recusado com a
    pergunta: qual task em `tasks.md` cobre isso? Se nenhuma cobre, o caminho é Trilha 4, não
    um commit avulso. Correção de bug segue a trilha de bug.
-   **Única exceção:** o mockup do passo 5 da Trilha 1, que é HTML descartável dentro de
+   **Única exceção:** o mockup do passo 7 (validar) da Trilha 1, que é HTML descartável dentro de
    `specs/<feature>/mockup/`, com dado fictício e sem nenhuma dependência. Ele não é código de
    produção e não é aproveitado na implementação.
 2. **Executar `/speckit-plan` com marcação de indefinição pendente na spec.** Planejar sobre
@@ -439,10 +480,12 @@ nisso" não é critério. O critério é o arquivo.
 | `shape` | | ✱ é de onde sai o ADR |
 | `decide` | | ✱ veredicto precisa de dono |
 | Constituição do domínio | já existe, sem placeholder, e o domínio não mudou | |
+| Perfis e atores | os perfis já estão escritos em `perfis.md` e a feature não introduz ator novo | |
+| Histórias | | ✱ ponto mais estreito: tudo herda a qualidade daqui |
 | `specify` | | ✱ |
 | `clarify` | não há marcação de indefinição na spec (verificável por busca) | |
 | Desenho do produto | a feature não acrescenta nem altera nenhuma tela, menu, coluna, filtro, ação ou permissão. Se acrescenta ou altera qualquer um deles, **não pula** | |
-| Mockup de validação | feature que só muda regra de cálculo ou processamento, sem efeito visível para quem usa. Obrigatório em tela nova, em mudança de navegação e em qualquer feature de prioridade P1 | |
+| Validação (mockup ou contrato) | feature que só muda regra de cálculo ou processamento, sem efeito visível para quem usa. Obrigatório em tela nova, em mudança de navegação e em qualquer feature de prioridade P1. Em **jogo**, a conferência do contrato de evento **não pula** | |
 | Compilar a entrega | **nunca pula** quando o trabalho vai para o backlog de outra pessoa. Pula só em feature que a mesma pessoa especifica e executa na sequência | ✱ |
 | `checklist` | feature de prioridade baixa, **a critério de produto**. Obrigatório em feature que toque dinheiro, dado de identidade ou comunicação com apostador | |
 | Trilha 2 inteira | o serviço já existe **e** o inventário de divergências está registrado | |
@@ -464,7 +507,7 @@ Portão sem dono nomeado não é portão.
 | Portão | Executa | Assina | Regra de separação |
 |---|---|---|---|
 | `decide` | Etiene e Daniel, com operações | operações co-assina | quem propõe não assina sozinho |
-| `checklist` (aceite da spec) | produto | operações co-assina | quem escreve a spec não aceita sozinho |
+| `checklist` / aceite (fronteira) | produto | operações, **tech lead** e **segurança** co-assinam | quatro assinaturas: tech lead recebe o trabalho; segurança entra quando a feature toca dinheiro, identidade ou comunicação com apostador; quem escreve não aceita sozinho |
 | Provisionar / go-live (Trilha 4) | tech lead | SRE aprova em PR | 1º PR aprovado da Trilha 3 dispara; serviço não provisiona a própria infra |
 | Constitution Check | agente declara | revisor humano confere | violação sem ADR não passa |
 | PR final | dev responsável | revisor humano | autor não aprova o próprio PR |
@@ -488,6 +531,10 @@ verdade para a mudança seguinte.
   "mesmo PR" vale por domínio, não cruzando repositório.
 - O artefato de produto (PRD, spec, desenho) é fonte de verdade em `-prod`; quando ele muda, a
   mudança é referenciada no PR de código que a implementa.
+- Na **convergência** (Trilha 3) o código é comparado contra **a especificação, o desenho e os
+  itens de entrega**, não só contra a spec. É o que faz decisão de produto — estado de erro,
+  permissão por perfil, evento que alimenta a métrica — ser conferida contra o que foi aceito, e
+  não só o requisito em prosa.
 - Artefato desatualizado é **dívida** e é tratado como dívida.
 - É **PROIBIDO** tratar a especificação como andaime descartável.
 
@@ -533,11 +580,14 @@ dois gates acima são a defesa disponível.
 
 ---
 
-**Versão**: 0.5 | **Depende de**: Constituição de Engenharia da Suprema v1.0.0 · Spec Kit v1.0.1
-pinada · Archetypes simplified-traditional / traditional / layered | **Atualizado**: 2026-09-17
+**Versão**: 0.6 | **Depende de**: Constituição de Engenharia da Suprema v1.2.0 · Spec Kit v1.0.1
+pinada · Archetypes simplified-traditional / traditional / layered | **Atualizado**: 2026-09-18
 
-Nesta versão: Trilha 2 é **100% local** (sem SRE); o **provisionamento com SRE** vira o passo 1
-da **Trilha 4 (Entrega e Sustentação)**, como portão de go-live disparado no primeiro PR
-aprovado da Trilha 3 e a cada mudança de infra. Também: os **três archetypes** com matriz de
-escolha e o **modelo de três repositórios** por serviço (`-prod` / `-api` / `-web`) com PR por
-domínio. Isso resolve o antigo `TODO(VARIANTE_COMPLETA)` da Constituição de Engenharia.
+Nesta versão (0.6): a **Trilha 1 ganha nove passos** — dois novos (perfis e atores; histórias) e
+quatro ampliados (desenho, validar, compilar, portão) —, fechando os seis gaps de rastreabilidade
+entre produto e Engenharia do anexo de arquitetura: história com padrão próprio, perfis antes da
+história, definição única do item de entrega com campo de origem, convergência contra desenho e
+itens, sinais de comportamento como evidência da variante, e matriz de permissões com assinatura
+de tech lead e segurança no portão. Cinco decisões de processo ficam marcadas como pendentes.
+Versão anterior (0.5): Trilha 2 **100% local**; provisionamento com SRE na **Trilha 4**; três
+archetypes com matriz de escolha; modelo de três repositórios (`-prod` / `-api` / `-web`).

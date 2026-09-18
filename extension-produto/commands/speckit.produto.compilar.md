@@ -4,7 +4,7 @@ description: "Compila os artefatos fragmentados da Trilha 1 em itens de entrega 
 
 # Compilar a entrega
 
-Produz duas saídas a partir dos artefatos da Trilha 1. É o passo 6 da Trilha 1 da Esteira de
+Produz duas saídas a partir dos artefatos da Trilha 1. É o passo 8 da Trilha 1 da Esteira de
 Criação Suprema.
 
 | Saída | O que é | Para quem |
@@ -45,8 +45,10 @@ Considere a entrada antes de prosseguir, se não estiver vazia.
 2. `spec.md` MUST existir.
 3. `desenho.md` MUST existir com `**Status**: aprovado` no cabeçalho. Se estiver como
    `proposta`, **pare**: compilar desenho em iteração gera item que muda amanhã.
-4. Leia **inteiros**: `spec.md`, `desenho.md`, `.specify/memory/constitution.md`, e o que
-   existir em `.specify/assessments/<slug>/` (`problem.md`, `concept.md`, `decision.md`).
+4. Leia **inteiros**: `spec.md`, `desenho.md`, `historias.md`, `perfis.md`,
+   `.specify/memory/constitution.md`, e o que existir em `.specify/assessments/<slug>/`
+   (`problem.md`, `concept.md`, `decision.md`). O `historias.md` é necessário para preencher a
+   **origem** de cada item.
 5. Se existir `checklists/`, leia. O que estiver reprovado lá **não** é compilado como pronto.
 
 ## Passo 1 · Declarar os subsistemas e os prefixos
@@ -76,15 +78,26 @@ Mostre a lista de prefixos ao usuário e **confirme antes de gerar os arquivos.*
 
 ## Passo 2 · Gerar um arquivo por item
 
+**Granularidade do item [A DEFINIR] — decisão de processo pendente.** O anexo de arquitetura
+registra que ainda não está decidido se o item de entrega é **um por requisito** ou **um por
+história**; as duas leituras existem hoje em documentos diferentes, e a escolha muda o formato do
+backlog inteiro. Até a decisão ser tomada, gere **um arquivo por requisito** e preencha o campo de
+**origem** com a história e o requisito que o originaram, de modo que a rastreabilidade feche pelos
+dois lados, seja qual for a decisão.
+
 Para cada requisito, um arquivo `entregaveis/<PREFIXO>-NN.md` com **todas** as seções:
 
 ```markdown
 # <PREFIXO>-NN · <título curto do item>
 
 > GERADO por /speckit-produto-compilar. Não edite à mão: rode o comando de novo.
-> Fonte: spec.md, desenho.md · Compilado em <AAAA-MM-DD>
+> Fonte: historias.md, spec.md, desenho.md · Compilado em <AAAA-MM-DD>
 
 **Subsistema**: <nome> · **Prioridade**: <P1|P2|P3> · **Fase**: <onda a que pertence>
+
+## Origem
+- **História**: <H-NN de historias.md, com o título>
+- **Requisito**: <FR-xxx ou <PREFIXO>-NN de spec.md que este item realiza>
 
 ## Contexto
 <um parágrafo, do problem.md: quem sofre e o que dói. Sem repetir o PRD inteiro.>

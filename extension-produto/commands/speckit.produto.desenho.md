@@ -4,7 +4,7 @@ description: "Propõe a superfície do produto (perfis, navegação, telas, aç�
 
 # Desenhar a superfície do produto
 
-Produz `specs/<feature>/desenho.md`: o **produto concreto**, tela por tela. É o passo 4 da
+Produz `specs/<feature>/desenho.md`: o **produto concreto**, tela por tela. É o passo 6 da
 Trilha 1 da Esteira de Criação Suprema.
 
 A especificação diz **o que** o produto faz. Este passo diz **como a pessoa usa**: quais menus
@@ -30,14 +30,17 @@ Considere a entrada antes de prosseguir, se não estiver vazia.
 ## Pré-condições
 
 1. Rode `.specify/scripts/bash/check-prerequisites.sh --json` e leia os caminhos.
-2. `spec.md` MUST existir. Se não existir, **pare** e diga que o passo 2 (`/speckit-specify`)
+2. `spec.md` MUST existir. Se não existir, **pare** e diga que o passo 4 (`/speckit-specify`)
    ainda não aconteceu.
-3. Leia **inteiros**, sem pular: `spec.md`, `.specify/memory/constitution.md`, e todos os
-   artefatos de `.specify/assessments/<slug>/` que existirem (`problem.md`, `concept.md`,
-   `decision.md`).
-4. Se `spec.md` ainda tem marcação de indefinição pendente, avise e pergunte se o usuário quer
+3. `perfis.md` MUST existir e estar aprovado. Se não existir, **pare** e diga que o passo 2
+   (`/speckit-produto-perfis`) ainda não aconteceu: o desenho **consome** os perfis, não os
+   inventa.
+4. Leia **inteiros**, sem pular: `spec.md`, `perfis.md`, `historias.md`,
+   `.specify/memory/constitution.md`, e todos os artefatos de `.specify/assessments/<slug>/` que
+   existirem (`problem.md`, `concept.md`, `decision.md`).
+5. Se `spec.md` ainda tem marcação de indefinição pendente, avise e pergunte se o usuário quer
    clarificar primeiro.
-5. Se `desenho.md` já existe e está aprovado, trate como revisão: mostre o que vai mudar antes
+6. Se `desenho.md` já existe e está aprovado, trate como revisão: mostre o que vai mudar antes
    de mudar.
 
 ## Passo 0 · Tipo de produto
@@ -83,9 +86,9 @@ Regras das marcas, sem exceção:
 Escreva `specs/<feature>/desenho.md` completo. O conjunto de seções depende do tipo declarado
 no passo 0. Nenhuma seção é omitida: seção sem base recebe `[INDEFINIDO]`.
 
-- **Interface** → seções 1 a 11 abaixo
-- **Jogo** → seções J1 a J8 abaixo
-- **Híbrido** → J1 a J8 para o jogo, mais 1 a 11 para o back-office, em blocos separados
+- **Interface** → seções 1 a 12 abaixo
+- **Jogo** → seções J1 a J8 abaixo, mais a seção 10 (sinais de comportamento), que vale para todo tipo
+- **Híbrido** → J1 a J8 para o jogo, mais 1 a 12 para o back-office, em blocos separados
 
 O cabeçalho do arquivo MUST conter, nesta forma exata, porque o passo seguinte depende dele:
 
@@ -93,13 +96,29 @@ O cabeçalho do arquivo MUST conter, nesta forma exata, porque o passo seguinte 
 **Status**: proposta · rodada 1
 ```
 
-### 1 · Perfis e permissões
+### 1 · Perfis e matriz de permissões
 
-Tabela: perfil, quem é, o que pode ver, o que pode fazer, o que **não** pode.
+Os perfis **não nascem aqui**: eles vêm de `perfis.md` (passo 2). Traga a tabela de atores desse
+arquivo como referência e **não a reinvente**. Se `perfis.md` sentir falta de algum ator que as
+telas exigem, **aponte a divergência e pergunte** em vez de criar o ator no desenho.
 
-Pergunta que você MUST responder explicitamente, mesmo que como `[SUPOSTO]`: existe perfil de
-**operação, suporte ou back-office** além do usuário final? Em produto da Suprema quase sempre
-existe, e é o mais esquecido na especificação.
+Este passo acrescenta a **matriz de permissões no formato da plataforma** (SayPlus), que é um dos
+dois entregáveis novos do desenho. Para cada capacidade das telas, uma permissão no padrão
+`modulo.recurso.acao`, com os verbos `read | create | edit | delete` (é **`edit`, nunca
+`update`**, conforme o Princípio II da Constituição de Engenharia):
+
+| Permissão (`modulo.recurso.acao`) | Perfis que a têm (de `perfis.md`) | Telas/ações que ela libera |
+|---|---|---|
+| `<modulo>.<recurso>.<read\|create\|edit\|delete>` | … | … |
+
+Regras da matriz:
+
+- **Cobre todo ator de `perfis.md`.** Ator sem nenhuma permissão é sinal de erro: aponte.
+- **Toda tela e ação da seção 4 mapeia para pelo menos uma permissão.** Ação sem permissão
+  declarada nasce negada e não passa no build (Princípio II).
+- **`[A DEFINIR] — decisão de processo pendente:** *quem registra as permissões no catálogo da
+  plataforma*. A régua exige registro antes do uso, e o anexo de arquitetura marca que hoje nenhum
+  passo tem esse dono. Produza a matriz mesmo assim; marque o dono do registro como `[INDEFINIDO]`.
 
 ### 2 · Mapa de navegação
 
@@ -168,7 +187,25 @@ Para cada critério de sucesso mensurável da especificação, que evento precis
 qual tela, em qual ação. **Métrica sem evento correspondente não é medível**, e isso se descobre
 aqui, não depois do lançamento.
 
-### 10 · Fora de escopo visual
+### 10 · Sinais de comportamento do produto
+
+O segundo entregável novo do desenho, e vale para **todo tipo** (interface, jogo, híbrido). São
+**fatos de negócio, sem tecnologia**, que a Trilha 2 usa como **evidência escrita** para escolher a
+variante do archetype. Não decida a variante aqui; só levante os sinais.
+
+| Sinal | Resposta | De onde saiu |
+|---|---|---|
+| Avisa alguém por notificação, e-mail ou push? | sim/não + qual evento | seção 7 |
+| Depende de outro sistema em tempo real (operador, provedor, SayPlus, terceiro)? | sim/não + qual | histórias / fluxos |
+| Tem volume alto ou pico previsível (rodadas, campanhas, horário de pico)? | sim/não + ordem de grandeza | descoberta / métricas |
+| Roda em horário ou em lote (fechamento, reprocessamento, job)? | sim/não + quando | fluxos |
+| Guarda ou processa binário/arquivo? | sim/não | requisitos |
+
+Por que isto importa: a matriz de escolha da Trilha 2 pergunta se o produto precisa de **cache
+distribuído, mensageria ou HTTP externo**. Estes sinais são a resposta em linguagem de negócio,
+registrada antes de a decisão técnica acontecer. Sem eles, a variante era escolhida sem evidência.
+
+### 11 · Fora de escopo visual
 
 O que deliberadamente **não** tem tela nesta versão, e por quê. Espelha as não-metas da
 descoberta.
@@ -246,7 +283,7 @@ rodada só enxerga rodadas, e primeiro depósito, registro e depósito vivem no 
 indicadores de primeiro depósito do brief dependiam de um segundo fluxo que não existia, e isso
 foi descoberto tarde, por olho humano.
 
-### 11 · Conformidade com a constituição
+### 12 · Conformidade com a constituição
 
 Princípio por princípio da constituição do domínio: **conforme**, ou a tela ou ação que
 conflita. Desenho que viola a constituição e não declara o conflito não é entregue como pronto.

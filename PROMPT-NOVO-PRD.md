@@ -30,8 +30,9 @@ O QUE QUERO NESTA SESSÃO:
 Rodar a Trilha 0 (Descoberta) e a Trilha 1 (Definição do produto), nesta ordem, e
 nada além disso. O resultado esperado é um PRD completo distribuído nos artefatos:
 intake.md, research.md, problem.md, concept.md, decision.md, constitution.md,
-spec.md, desenho.md, um mockup HTML navegável, os itens de entrega em
-entregaveis/ e o PRD consolidado.
+perfis.md, historias.md, spec.md, desenho.md, a validação (mockup HTML para tela
+ou conferência de contrato para jogo), os itens de entrega em entregaveis/ e o
+PRD consolidado.
 
 COMECE ASSIM, sem me perguntar nada antes:
 1. Execute o bootstrap da seção 1 do ESTEIRA.md. Crie o projeto num
@@ -40,13 +41,13 @@ COMECE ASSIM, sem me perguntar nada antes:
    (assess, bug e a extensão produto deste repositório, com --dev), copie
    ESTEIRA.md como CLAUDE.md na raiz do projeto novo, e coloque .claude/
    e .DS_Store no .gitignore dele.
-2. Valide o estado esperado da seção 1.3: confirme que existem 21 skills e que
+2. Valide o estado esperado da seção 1.3: confirme que existem 23 skills e que
    .specify/memory/constitution.md ainda está com placeholder.
 3. Me mostre a árvore do projeto criado e só então pare para conversar comigo.
 
 REGRAS DESTA SESSÃO, sem exceção:
 - NÃO escreva código de produção. Nenhuma linha. A única exceção é o mockup do
-  passo 10, que é HTML descartável com dado fictício, dentro de
+  passo de validação, que é HTML descartável com dado fictício, dentro de
   specs/<feature>/mockup/, e que nunca é aproveitado na implementação.
 - NÃO execute /speckit-plan, /speckit-tasks nem /speckit-implement.
 - NÃO escolha, sugira ou discuta stack, banco, framework ou arquitetura. A parte
@@ -80,14 +81,15 @@ Não antecipe isso agora.
 ## O que acontece depois de colar
 
 O agente executa o bootstrap sozinho, mostra a árvore e para. A partir daí você percorre os
-doze passos das Trilhas 0 e 1, um por vez, com o agente parando em cada portão.
+quatorze passos das Trilhas 0 e 1, um por vez, com o agente parando em cada portão.
 
 O percurso completo e os artefatos de cada passo estão em `LEIA-PRIMEIRO.md`.
 
-Nos passos 9 a 11 o agente propõe a superfície do produto (você reage em vez de responder
-questionário), gera um mockup navegável para você conferir se ele entendeu, e compila tudo em
-itens prontos para o backlog mais o PRD consolidado. É no mockup que a maioria das ideias novas
-aparece, então reserve tempo para olhar com calma.
+Antes de especificar, o agente escreve os perfis e atores e as histórias de usuário (passos 7 e
+8), que são os dois passos novos e o ponto mais estreito da esteira. Nos passos 11 a 13 ele
+propõe a superfície do produto (você reage em vez de responder questionário), valida (mockup
+navegável para tela) e compila tudo em itens prontos para o backlog mais o PRD consolidado. É na
+validação que a maioria das ideias novas aparece, então reserve tempo para olhar com calma.
 
-Se o produto for um jogo, o passo 9 troca o conjunto de seções: o entregável para tecnologia
-passa a ser o contrato de evento, não o menu.
+Se o produto for um jogo, o passo 11 (desenho) troca o conjunto de seções e a validação passa a
+ser a conferência do contrato de evento: o entregável para tecnologia é o contrato, não o menu.
