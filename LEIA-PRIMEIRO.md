@@ -26,9 +26,9 @@ sessão do agente. O resto desta página é o mapa, para você entender onde est
 TRILHA 0 · Descoberta      por ideia            produto + operações
 TRILHA 1 · Definição       por iniciativa       produto + operações
    ───────── aqui produto entrega para tecnologia ─────────
-TRILHA 2 · Nascimento      uma vez por serviço  tecnologia (local-first; SRE depois)
+TRILHA 2 · Nascimento      uma vez por serviço  tecnologia (local, sem SRE)
 TRILHA 3 · Construção      por feature          tecnologia
-TRILHA 4 · Sustentação     contínuo             time do serviço
+TRILHA 4 · Entrega e Sustentação  contínuo      time do serviço + SRE
 ```
 
 **Se o seu trabalho é PRD, você opera nas Trilhas 0 e 1 e para na fronteira.** As Trilhas 2 e 3

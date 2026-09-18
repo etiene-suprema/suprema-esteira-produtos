@@ -114,9 +114,9 @@ inteira, ou pula passos com critério verificável. Nunca "meio pula".
 TRILHA 0 · Descoberta          por ideia            produto + operações
 TRILHA 1 · Definição           por iniciativa       produto + operações
      ─────────── fronteira: aqui produto entrega para tech ───────────
-TRILHA 2 · Nascimento          uma vez por serviço  tech (local-first; SRE depois)
+TRILHA 2 · Nascimento          uma vez por serviço  tech (local, sem SRE)
 TRILHA 3 · Construção          por feature          tech
-TRILHA 4 · Sustentação         contínuo             time do serviço
+TRILHA 4 · Entrega e Sustentação  contínuo          time do serviço + SRE
 ```
 
 ### Trilha 0 · Descoberta
@@ -245,10 +245,9 @@ Errar a escolha não é ajuste de config: a variante simples carrega um gate de 
 **derruba o build** ao encontrar import de cache, mensageria ou HTTP externo. A correção depois
 é retrabalho.
 
-**SRE adiado.** Enquanto a fase é local, a declaração de infraestrutura
-(`deploy/infra/requirements.yaml`) e o registro no catálogo (`catalog-info.yaml`) ficam no repo
-como **contrato para depois**, mas não se abre PR ao SRE nem se provisiona nada. A reentrada do
-SRE é decisão registrada em ADR, quando o serviço precisar de ambiente compartilhado.
+**O SRE não entra aqui.** A Trilha 2 é local do começo ao fim. O archetype já traz `deploy/` e
+`catalog-info.yaml`, que ficam no repo como referência e contrato. **Provisionar é a Trilha 4**,
+no primeiro go-live, não agora.
 
 ### Trilha 3 · Construção
 
@@ -266,12 +265,23 @@ SRE é decisão registrada em ADR, quando o serviço precisar de ambiente compar
 com os docs de construção junto do código. O passo 5 executa os comandos de migração de tela
 **um por vez**, validando o resultado de cada etapa, conforme o guia do módulo na SayPlus.
 
-### Trilha 4 · Sustentação
+### Trilha 4 · Entrega e Sustentação
+
+Abre com o **go-live**: é aqui que o SRE entra e o serviço passa a existir fora da máquina. O
+resto é a operação contínua.
+
+**Passo 1 · Provisionar (portão de go-live).** Disparado pelo **primeiro PR aprovado na Trilha
+3**. O tech lead ajusta `deploy/infra/requirements.yaml` ao serviço e abre PR ao SRE; o SRE
+aprova em PR e provisiona. Serviço não provisiona a própria infra. **Re-dispara** sempre que
+`requirements.yaml` mudar (feature futura que acrescente cache, mensageria ou HTTP externo).
+
+**Depois do go-live, a sustentação contínua:**
 
 | Situação | Caminho |
 |---|---|
 | Bug | `/speckit-bug-assess` → `/speckit-bug-fix` → `/speckit-bug-test` |
-| Requisito mudou | atualiza o artefato **antes** do código, no **mesmo PR** |
+| Requisito mudou | atualiza o artefato **antes** do código, no mesmo PR do domínio |
+| Mudança de infra | novo `requirements.yaml`, novo PR ao SRE |
 | Divergência do padrão | para o trabalho e abre ADR |
 | Regra da casa mudou | emenda à constituição por PR dedicado |
 
@@ -425,7 +435,7 @@ nisso" não é critério. O critério é o arquivo.
 | `checklist` | feature de prioridade baixa, **a critério de produto**. Obrigatório em feature que toque dinheiro, dado de identidade ou comunicação com apostador | |
 | Trilha 2 inteira | o serviço já existe **e** o inventário de divergências está registrado | |
 | Escolha da variante | | ✱ erro aqui é retrabalho, não config |
-| `requirements.yaml` / PR ao SRE | **adiado** enquanto local-first | ✱ quando o SRE reentra, é o contrato, não o pedido |
+| Provisionar / PR ao SRE (Trilha 4) | | ✱ portão de go-live; dispara no 1º PR aprovado e a cada mudança de infra |
 | `plan` | | ✱ é o passo que impede cada projeto nascer de um jeito |
 | `tasks` | | ✱ |
 | `analyze` | menos de 20 tasks | |
@@ -443,7 +453,7 @@ Portão sem dono nomeado não é portão.
 |---|---|---|---|
 | `decide` | Etiene e Daniel, com operações | operações co-assina | quem propõe não assina sozinho |
 | `checklist` (aceite da spec) | produto | operações co-assina | quem escreve a spec não aceita sozinho |
-| `requirements.yaml` | tech lead | SRE aprova em PR | **adiado enquanto local-first**; serviço não provisiona a própria infra |
+| Provisionar / go-live (Trilha 4) | tech lead | SRE aprova em PR | 1º PR aprovado da Trilha 3 dispara; serviço não provisiona a própria infra |
 | Constitution Check | agente declara | revisor humano confere | violação sem ADR não passa |
 | PR final | dev responsável | revisor humano | autor não aprova o próprio PR |
 
@@ -508,10 +518,11 @@ dois gates acima são a defesa disponível.
 
 ---
 
-**Versão**: 0.4 | **Depende de**: Constituição de Engenharia da Suprema v1.0.0 · Spec Kit v1.0.1
+**Versão**: 0.5 | **Depende de**: Constituição de Engenharia da Suprema v1.0.0 · Spec Kit v1.0.1
 pinada · Archetypes simplified-traditional / traditional / layered | **Atualizado**: 2026-09-17
 
-Nesta versão: Trilha 2 passa a **local-first** (SRE adiado), os **três archetypes** entram com
-matriz de escolha, e o **modelo de três repositórios** por serviço (`-prod` / `-api` / `-web`)
-com PR por domínio. Isso resolve o antigo `TODO(VARIANTE_COMPLETA)` da Constituição de
-Engenharia: a variante completa existe, em forma tradicional e hexagonal.
+Nesta versão: Trilha 2 é **100% local** (sem SRE); o **provisionamento com SRE** vira o passo 1
+da **Trilha 4 (Entrega e Sustentação)**, como portão de go-live disparado no primeiro PR
+aprovado da Trilha 3 e a cada mudança de infra. Também: os **três archetypes** com matriz de
+escolha e o **modelo de três repositórios** por serviço (`-prod` / `-api` / `-web`) com PR por
+domínio. Isso resolve o antigo `TODO(VARIANTE_COMPLETA)` da Constituição de Engenharia.

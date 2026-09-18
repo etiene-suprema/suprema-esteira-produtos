@@ -45,9 +45,9 @@ serviço nascer do mesmo golden path.
 TRILHA 0 · Descoberta      por ideia            produto + operações      pode matar a ideia
 TRILHA 1 · Definição       por iniciativa       produto + operações      termina no aceite
      ─────────────── fronteira: produto entrega para tecnologia ───────────────
-TRILHA 2 · Nascimento      uma vez por serviço  tecnologia + (SRE depois) local-first
+TRILHA 2 · Nascimento      uma vez por serviço  tecnologia (local, sem SRE)
 TRILHA 3 · Construção      por feature          tecnologia
-TRILHA 4 · Sustentação     contínuo             time do serviço
+TRILHA 4 · Entrega e Sustentação  contínuo      time do serviço + SRE
 ```
 
 A **fronteira** entre produto e tecnologia é o portão de aceite da spec (fim da Trilha 1).
@@ -101,9 +101,10 @@ Reagir a uma proposta custa uma fração de responder quarenta perguntas. O mock
 
 ## 6 · Trilha 2 · Nascimento do serviço (local-first)
 
-Aqui o produto aprovado vira um serviço de pé na máquina do desenvolvedor. **A decisão desta
-revisão: rodar tudo localmente e adiar o SRE.** O archetype já foi feito para isso, sobe inteiro
-com `docker compose` (Postgres, Redis, LocalStack) e roda os mesmos gates do CI localmente.
+Aqui o produto aprovado vira um serviço de pé na máquina do desenvolvedor. **A Trilha 2 é 100%
+local, sem SRE.** O archetype já foi feito para isso, sobe inteiro com `docker compose` (Postgres,
+Redis, LocalStack) e roda os mesmos gates do CI localmente. O provisionamento com SRE fica na
+Trilha 4 (go-live).
 
 | # | Passo | Artefato / prova | Contexto |
 |---|---|---|---|
@@ -113,8 +114,8 @@ com `docker compose` (Postgres, Redis, LocalStack) e roda os mesmos gates do CI 
 | 4 | Rodar o módulo local | `docker compose up` + migrations + **gates verdes** | verde aqui é verde no CI |
 | 5 | Consolidar a constituição do serviço | `constitution.md` (mãe + domínio) | junta a Constituição de Engenharia com a de domínio da Trilha 1 |
 | 6 | Remover o módulo de exemplo | ausência de `users`/`petstore` | o `[EXEMPLO]` sai antes do primeiro merge |
-| 7 | Conectar o módulo à SayPlus localmente | integração funcionando local | fim da Trilha 2 nesta fase |
-| — | ~~Declarar infra e abrir PR ao SRE~~ | **adiado** | os manifestos `deploy/` e `catalog-info.yaml` ficam no repo como contrato para quando o SRE entrar |
+| 7 | Conectar o módulo à SayPlus localmente | integração funcionando local | fim da Trilha 2 |
+| — | Infra como contrato | referência | `deploy/` e `catalog-info.yaml` já vêm no archetype; **provisionar é a Trilha 4** |
 
 Isso segue o seu guia de "novo módulo na SayPlus": preparar a SayPlus, entender e adaptar o
 archetype, criar o repositório do módulo, rodar local, conectar. A migração das telas entra na
@@ -142,14 +143,22 @@ com seus docs de construção junto do código. Nada de código de produção fo
 
 ---
 
-## 8 · Trilha 4 · Sustentação
+## 8 · Trilha 4 · Entrega e Sustentação
 
-Contínuo, pelo time do serviço, com o serviço já em produção.
+Abre com o go-live, e é aqui que o SRE entra.
+
+**Passo 1 · Provisionar (portão de go-live).** Disparado pelo **primeiro PR aprovado na Trilha
+3**. O tech lead ajusta `deploy/infra/requirements.yaml` ao serviço e abre PR ao SRE; o SRE
+aprova em PR e provisiona. Re-dispara a cada mudança de infra. Serviço não provisiona a própria
+infra.
+
+**Depois do go-live, a sustentação contínua:**
 
 | Situação | Caminho |
 |---|---|
 | Bug | `/speckit-bug-assess` → `/speckit-bug-fix` → `/speckit-bug-test` |
 | Requisito mudou | atualiza o artefato **antes** do código, no mesmo PR do domínio |
+| Mudança de infra | novo `requirements.yaml`, novo PR ao SRE |
 | Divergência do padrão | para o trabalho e abre ADR |
 | Regra da casa mudou | emenda à constituição por PR dedicado |
 
@@ -197,7 +206,7 @@ mesmo PR, o de front idem. O `-prod` guarda o PRD e os docs de referência.
 | `checklist` / aceite (Trilha 1) | produto | operações co-assina | quem escreve a spec não aceita sozinho |
 | Constitution Check (Trilha 3) | agente declara | revisor humano | violação sem ADR não passa |
 | PR final (Trilha 3) | dev responsável | revisor humano | autor não aprova o próprio PR |
-| `requirements.yaml` / SRE | tech lead | SRE aprova em PR | **adiado** enquanto local-first |
+| Provisionar / go-live (Trilha 4) | tech lead | SRE aprova em PR | 1º PR aprovado da Trilha 3 dispara |
 
 Revisão humana verifica o que a ferramenta não vê: fronteira entre serviços, isolamento de
 tenant, contrato de erro, e se a spec resolve o problema descrito.
@@ -208,8 +217,10 @@ tenant, contrato de erro, e se a spec resolve o problema descrito.
 
 1. **Critério tradicional vs hexagonal.** Proposta: hexagonal quando o domínio é complexo com
    muita regra ou integração isolável; tradicional no resto. Confirma ou ajusta?
-2. **Reentrada do SRE.** Local-first agora. Qual o gatilho para reativar a declaração de infra e
-   o provisionamento: antes do primeiro ambiente compartilhado? Antes de tráfego real? Um ADR?
+2. **Reentrada do SRE (decidido, confirme).** O provisionamento é o passo 1 da Trilha 4
+   (Entrega e Sustentação), portão de go-live disparado pelo primeiro PR aprovado da Trilha 3 e
+   a cada mudança de `requirements.yaml`. Isso inverte o "não provisiona nada ainda" do seu
+   guia; a intenção de provar local antes fica preservada. A cadência está boa?
 3. **Migração de telas.** Os comandos de migração do front, executados um a um pela SayPlus,
    ficam melhor documentados onde: no `frontend-engineer.md` da SayPlus, no `-web`, ou no `-prod/docs`?
 4. **Dono de segurança.** A Constituição de Engenharia cita um responsável por segurança para
