@@ -213,5 +213,5 @@ feature toca dinheiro, dado de identidade ou comunicação com apostador.
 
 ---
 
-**Versão** 0.5 · **Régua** Constituição de Engenharia da Suprema v1.2.0 · **Ferramenta** Spec Kit
+**Versão** 0.5 · **Régua** Constituição de Engenharia da Suprema v1.2.1 · **Ferramenta** Spec Kit
 pinado na tag indicada em `ESTEIRA.md`

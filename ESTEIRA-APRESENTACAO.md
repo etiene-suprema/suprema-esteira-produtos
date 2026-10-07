@@ -261,7 +261,7 @@ tenant, contrato de erro, e se a spec resolve o problema descrito.
    comportamento; validação com contrato de evento em jogo; compilação com origem por item;
    portão com quatro assinaturas). Fecha os seis gaps de rastreabilidade entre produto e
    Engenharia. `ESTEIRA.md` v0.6, `LEIA-PRIMEIRO.md` v0.5, extensão de produto v1.3.0,
-   Constituição de Engenharia v1.2.0 (convergência compara também contra desenho e itens).
+   Constituição de Engenharia v1.2.1 (convergência compara também contra desenho e itens).
 
 **Decisões de processo pendentes** (do anexo, a fechar antes da adoção plena; ficam marcadas na
 esteira até alguém assinar):
@@ -279,5 +279,5 @@ cadência de reentrada do SRE.
 ---
 
 **Versão** para apresentação · inclui o redesenho da Trilha 1 (ESTEIRA.md v0.6) · **Régua**
-Constituição de Engenharia da Suprema v1.2.0 · **Ferramenta** Spec Kit v1.0.1 pinada ·
+Constituição de Engenharia da Suprema v1.2.1 · **Ferramenta** Spec Kit v1.0.1 pinada ·
 Archetypes: simplified-traditional, traditional, layered

@@ -550,9 +550,9 @@ especificação que ninguém manteve.
 | Constituição de Engenharia da Suprema | `CONSTITUICAO-ENGENHARIA.md` | engenharia, todo serviço backend |
 | Constituição deste serviço | `.specify/memory/constitution.md` | domínio, risco, regulatório |
 | Esteira de Criação Suprema | `LEIA-PRIMEIRO.md` | o processo, versão legível |
-| Archetype simples (tradicional) | `rian-suprema/simplified-traditional-archetype` | golden path sem cache/mensageria |
-| Archetype completo (tradicional) | `rian-suprema/traditional-archetype` | golden path com cache/mensageria/HTTP externo |
-| Archetype completo (hexagonal) | `rian-suprema/layered-archetype` | golden path para domínio complexo, ports/adapters |
+| Archetype simples (tradicional) | `SupremaCO/simplified-traditional-archetype` | golden path sem cache/mensageria |
+| Archetype completo (tradicional) | `SupremaCO/traditional-archetype` | golden path com cache/mensageria/HTTP externo |
+| Archetype completo (hexagonal) | `SupremaCO/layered-archetype` | golden path para domínio complexo, ports/adapters |
 | Sistema hospedeiro | `SupremaCO/sayplus` | onde cada módulo é abrigado |
 
 **Hierarquia em caso de conflito:** Constituição de Engenharia (em matéria de engenharia) →
@@ -580,8 +580,8 @@ dois gates acima são a defesa disponível.
 
 ---
 
-**Versão**: 0.6 | **Depende de**: Constituição de Engenharia da Suprema v1.2.0 · Spec Kit v1.0.1
-pinada · Archetypes simplified-traditional / traditional / layered | **Atualizado**: 2026-09-18
+**Versão**: 0.6 | **Depende de**: Constituição de Engenharia da Suprema v1.2.1 · Spec Kit v1.0.1
+pinada · Archetypes simplified-traditional / traditional / layered | **Atualizado**: 2026-10-07
 
 Nesta versão (0.6): a **Trilha 1 ganha nove passos** — dois novos (perfis e atores; histórias) e
 quatro ampliados (desenho, validar, compilar, portão) —, fechando os seis gaps de rastreabilidade
