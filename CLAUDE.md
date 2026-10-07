@@ -66,7 +66,7 @@ carregado. Não conduza trabalho de produto aqui.
 | `LEIA-PRIMEIRO.md` | entrada do time: o mapa das trilhas |
 | `PROMPT-NOVO-PRD.md` | prompt de copiar e colar para iniciar um PRD |
 | `ESTEIRA.md` | o processo. Vira o `CLAUDE.md` de cada projeto novo |
-| `CONSTITUICAO-ENGENHARIA.md` | os 9 princípios de engenharia, v1.2.0 |
+| `CONSTITUICAO-ENGENHARIA.md` | os 9 princípios de engenharia, v1.2.1 |
 | `ESTEIRA-APRESENTACAO.md` | apresentação da esteira para arquitetura |
 | `extension-produto/` | extensão própria: passos 2, 3, 6, 7 e 8 da Trilha 1 |
 | `bootstrap.sh` | cria e configura um projeto novo |

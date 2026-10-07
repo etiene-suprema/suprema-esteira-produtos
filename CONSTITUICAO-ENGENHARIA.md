@@ -1,15 +1,15 @@
 <!--
 Sync Impact Report
-- Mudança de versão: 1.1.0 → 1.2.0
-- Motivo do bump: MINOR. Ampliação material do Fluxo de Desenvolvimento (portão de
-  convergência, item 5): o código passa a ser comparado também contra o **desenho** e os
-  **itens de entrega**, não só contra a especificação, o plano e as tasks. Acompanha o
-  redesenho da Trilha 1 (ESTEIRA.md v0.6), que fecha os seis gaps de rastreabilidade entre
-  produto e Engenharia. Não altera nenhum princípio existente.
-- Histórico: 1.1.0 (MINOR) confirmou os repositórios das variantes do archetype e introduziu a
-  variante completa **hexagonal** no Princípio I. 1.0.0 (documento novo, MAJOR) adotou a
-  constituição a partir das regras já em vigor no Archetype Backend NestJS da Suprema,
-  convertidas de prosa em princípios declarativos e verificáveis.
+- Mudança de versão: 1.2.0 → 1.2.1
+- Motivo do bump: PATCH. Correção do endpoint dos repositórios das três variantes do archetype,
+  que migraram da organização `rian-suprema` para `SupremaCO` (a mesma do hospedeiro SayPlus).
+  Sem mudança semântica de princípio ou regra; apenas a URL de origem do Golden Path.
+- Histórico: 1.2.0 (MINOR) ampliou o Fluxo de Desenvolvimento (convergência compara também
+  contra o desenho e os itens de entrega), acompanhando o redesenho da Trilha 1 (ESTEIRA.md
+  v0.6). 1.1.0 (MINOR) confirmou os repositórios das variantes e introduziu a variante completa
+  **hexagonal** no Princípio I. 1.0.0 (documento novo, MAJOR) adotou a constituição a partir das
+  regras já em vigor no Archetype Backend NestJS da Suprema, convertidas de prosa em princípios
+  declarativos e verificáveis.
 - Princípios definidos (9):
   I.    Nasce do Archetype (Golden Path)
   II.   Identidade Delegada à Plataforma SayPlus
@@ -27,9 +27,9 @@ Sync Impact Report
   template para que as ferramentas do Spec Kit continuem a localizá-los.
 - TODOs pendentes: nenhum.
   - RESOLVIDO em 1.1.0 — TODO(VARIANTE_COMPLETA): a variante completa existe em duas
-    formas, `rian-suprema/traditional-archetype` (tradicional em camadas) e
-    `rian-suprema/layered-archetype` (hexagonal); a simples é
-    `rian-suprema/simplified-traditional-archetype`.
+    formas, `SupremaCO/traditional-archetype` (tradicional em camadas) e
+    `SupremaCO/layered-archetype` (hexagonal); a simples é
+    `SupremaCO/simplified-traditional-archetype`.
 -->
 
 # Constituição de Engenharia da Suprema
@@ -57,11 +57,11 @@ não é decisão de feature nem de preferência de time.
 **Escolha da variante** MUST ser decidida antes da primeira linha de código, pelo critério:
 
 - o domínio precisa de **cache distribuído, mensageria ou cliente HTTP externo**?
-  - **Não** → variante **simples**: `rian-suprema/simplified-traditional-archetype`
+  - **Não** → variante **simples**: `SupremaCO/simplified-traditional-archetype`
   - **Sim** → variante **completa**, em uma de duas formas:
-    - **tradicional em camadas** (padrão): `rian-suprema/traditional-archetype`
+    - **tradicional em camadas** (padrão): `SupremaCO/traditional-archetype`
     - **hexagonal** (ports/adapters), quando o domínio é complexo, com muita regra ou
-      integração isolável: `rian-suprema/layered-archetype`
+      integração isolável: `SupremaCO/layered-archetype`
 
 Errar essa escolha não é ajuste de configuração: a variante simples carrega um gate de
 arquitetura que **derruba o build** ao encontrar import de cache, mensageria ou HTTP
@@ -292,9 +292,9 @@ realiza** via IaC. Nenhum serviço provisiona infraestrutura por conta própria.
 **Registro no catálogo:** todo serviço MUST estar registrado no catálogo da plataforma, com
 **owner sendo um grupo real**, nunca uma pessoa.
 
-**Variantes do archetype:** simples em `rian-suprema/simplified-traditional-archetype`; completa
-em `rian-suprema/traditional-archetype` (tradicional em camadas) ou
-`rian-suprema/layered-archetype` (hexagonal). A escolha segue o critério do Princípio I.
+**Variantes do archetype:** simples em `SupremaCO/simplified-traditional-archetype`; completa
+em `SupremaCO/traditional-archetype` (tradicional em camadas) ou
+`SupremaCO/layered-archetype` (hexagonal). A escolha segue o critério do Princípio I.
 
 ## Decisões que Exigem ADR
 
@@ -383,4 +383,4 @@ até um ciclo de planejamento, o inventário das divergências e o plano de conv
 Divergência conhecida e registrada é dívida gerenciada. Divergência não registrada é
 violação.
 
-**Version**: 1.2.0 | **Ratified**: 2026-08-27 | **Last Amended**: 2026-09-18
+**Version**: 1.2.1 | **Ratified**: 2026-08-27 | **Last Amended**: 2026-10-07
