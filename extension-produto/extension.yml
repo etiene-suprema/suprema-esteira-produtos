@@ -3,7 +3,7 @@ schema_version: "1.0"
 extension:
   id: produto
   name: "Desenho de Produto (Suprema)"
-  version: "1.3.0"
+  version: "1.4.0"
   description: "Cinco passos da Trilha 1 da Esteira de Criação Suprema: perfis e atores, histórias de usuário com régua de prioridade, proposta e iteração da superfície do produto (interface ou jogo) com matriz de permissões e sinais de comportamento, validação por mockup navegável, e compilação da entrega em itens autossuficientes com origem, mais o PRD consolidado."
   category: "process"
   effect: "read-write"

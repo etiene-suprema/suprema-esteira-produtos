@@ -37,7 +37,8 @@ Escreva estas regras no topo do arquivo gerado, como comentário, e obedeça a t
   este mockup é descartado.
 - **Não decide stack.** HTML e CSS puros, sem framework, sem biblioteca, sem build. Se você
   escolher React, Tailwind ou qualquer dependência aqui, estará decidindo arquitetura num passo
-  de produto, o que é proibido pela esteira.
+  de produto, o que é proibido pela esteira. Isso vale também com o design system SayPlus: os
+  componentes dele são referência visual, recriados em HTML e CSS, nunca importados.
 - **Não usa dado real.** Todo dado é fictício e obviamente fictício. É proibido usar nome, CPF,
   e-mail, telefone ou valor de pessoa real, ainda que de teste.
 - **Não é protótipo funcional.** Nada persiste, nada calcula de verdade, nada chama serviço.
@@ -51,7 +52,11 @@ Escreva estas regras no topo do arquivo gerado, como comentário, e obedeça a t
    **pare** e diga que o desenho ainda está em iteração: mockar proposta que vai mudar é
    desperdício de trabalho seu e de atenção do usuário. Volte para `/speckit-produto-desenho`.
 4. Leia `spec.md`, `desenho.md` e `.specify/memory/constitution.md` inteiros.
-5. Se `desenho.md` foi aprovado com pendências registradas, mocke as telas mesmo assim e
+5. Leia o `**Hospedeiro**` no cabeçalho do `desenho.md`. Se for **SayPlus**, siga a seção
+   "Hospedeiro SayPlus: design system obrigatório" abaixo. Se o campo não existir (desenho
+   anterior a esta regra), **pergunte** se o produto será acoplado à SayPlus e registre a
+   resposta no cabeçalho do `desenho.md` antes de mockar.
+6. Se `desenho.md` foi aprovado com pendências registradas, mocke as telas mesmo assim e
    **marque visualmente** cada ponto pendente na interface (ver abaixo). Pendência que aparece
    na tela é pendência que alguém resolve.
 
@@ -61,7 +66,8 @@ Um **único arquivo** `specs/<feature>/mockup/index.html`, autossuficiente, com 
 mínimo de JavaScript necessário para navegar entre telas.
 
 Arquivo único e sem dependência externa é requisito, não preferência: é o que permite publicar
-como artefato e compartilhar com o time sem servidor.
+como artefato e compartilhar com o time sem servidor. A única exceção é a fonte e os ícones do
+design system SayPlus, quando o hospedeiro for SayPlus (ver seção própria).
 
 ### Cobertura obrigatória
 
@@ -86,7 +92,8 @@ como artefato e compartilhar com o time sem servidor.
 
 ### Qualidade visual
 
-Sóbrio e legível, não bonito. O objetivo é conferir estrutura, hierarquia e completude, não
+Sóbrio e legível, não bonito (com hospedeiro SayPlus, o visual é o do design system, ver
+seção abaixo). O objetivo é conferir estrutura, hierarquia e completude, não
 aprovar identidade visual. Cuidado específico: use dado fictício **plausível e brasileiro** nas
 tabelas e listas, porque dado genérico esconde problema de layout que dado real revela (nome
 comprido, valor grande, texto que estoura a coluna). Inclua ao menos uma linha com valor
@@ -94,6 +101,54 @@ extremo em cada tabela.
 
 Deve funcionar em tela de celular e de desktop, porque em vários produtos da Suprema a operação
 usa desktop e o usuário final usa celular, e isso muda o desenho.
+
+## Hospedeiro SayPlus: design system obrigatório
+
+Se o `desenho.md` diz `**Hospedeiro**: SayPlus`, o mockup é desenhado **com o design system
+SayPlus**, e não no estilo neutro. O motivo é de produto: a pessoa valida como a tela vai ficar
+dentro do backoffice que o time já usa, e o que o DS não cobre aparece agora, não na Trilha 3.
+
+**Fonte única:** o projeto "SayPlus sistema de componentes", em
+`https://claude.ai/artifact/2D7bqjuHS5BSji4tsuQdyx`. Leia os arquivos dele com a ferramenta de
+artefatos (leitura por caminho), nesta ordem:
+
+| Arquivo no DS | Para quê |
+|---|---|
+| `project/readme.md` | regras de conteúdo e fundamentos visuais (leia inteiro) |
+| `project/tokens/colors.css`, `typography.css`, `spacing.css`, `radius.css`, `base.css` | os tokens, copiados **literalmente** para o `<style>` do mockup |
+| `project/components/<grupo>/*.card.html` e `*.prompt.md` | aparência e estados de cada componente usado |
+| `project/ui_kits/backoffice/` (`AppShell.jsx` e telas) | o casco do backoffice: sidebar, header, cabeçalho de página |
+| `project/Menu com submenus.dc.html` | o menu lateral de 3 níveis |
+
+Se o DS não puder ser lido (sem a ferramenta de artefatos, sem acesso, link fora do ar),
+**pare** e peça à pessoa acesso ou uma exportação dos tokens. Nunca invente cor, fonte ou medida
+"parecida com a SayPlus", e nunca caia para o estilo neutro sem avisar.
+
+**Como aplicar:**
+
+- **Tokens copiados, não importados.** Cole as variáveis CSS do DS no `<style>` do arquivo,
+  com tema claro em `:root` e escuro em `.dark`, e um botão de tema no header. O mockup continua
+  arquivo único.
+- **Duas dependências externas permitidas, e só elas:** a fonte IBM Plex (Google Fonts, como no
+  `tokens/fonts.css`) e os ícones `lucide-static@0.460.0` (versão pinada do DS). Nada de React,
+  Tailwind ou dos `.jsx` do DS: eles são referência visual, recriados em HTML e CSS.
+- **Casco do backoffice:** sidebar fixa de 232px com o menu de 3 níveis, header de 56px, ação
+  principal à direita do cabeçalho de página, filtros acima da tabela. As telas do produto
+  entram como páginas do módulo no menu, onde o `desenho.md` posicionou.
+- **Componentes do DS** para tudo que o DS cobre, conforme o mapeamento da seção 6 do
+  `desenho.md`: Table, Pagination, Dialog, ConfirmDialog, campos, Badge, KpiCard, EmptyState,
+  Skeleton, Toast, Alert, Tabs, PageHeader.
+- **Regras de conteúdo do DS:** caixa de frase, sem travessão, botão com verbo e objeto,
+  confirmação com título em pergunta, números e datas em pt-BR.
+- **Componente fora do DS:** quando uma tela precisa de algo que o DS não tem, desenhe o mínimo
+  com os tokens e marque na tela com o selo `fora do DS`. Cada um entra na legenda do pé e volta
+  como pendência de design para a seção 6 do `desenho.md`. Não estenda o DS neste passo.
+- **Escopo do DS é desktop.** Se o `desenho.md` prevê uso no celular, mocke o celular com os
+  mesmos tokens e marque como `fora do DS (mobile ainda não desenhado)`.
+
+As outras regras deste comando não mudam: faixa de aviso no topo, dado fictício, seletor de
+perfil, estados alcançáveis, marcação de indefinição. Usar o DS deixa o mockup parecido com o
+produto real, e por isso a faixa de aviso é ainda mais necessária.
 
 ## Publicação
 
@@ -184,7 +239,8 @@ entrega e o PRD antes do portão de aceite.
 
 ## Ao terminar
 
-1. Diga quantas telas foram mockadas e quantas ficaram com indefinição visível.
+1. Diga quantas telas foram mockadas e quantas ficaram com indefinição visível. Com hospedeiro
+   SayPlus, diga também quantos componentes ficaram `fora do DS` e quais.
 2. Liste o que voltou para `desenho.md`, o que voltou para `spec.md` e o que ficou pendente.
 3. Informe o link do mockup publicado.
 4. Lembre que o mockup é descartável e que a construção acontece a partir do archetype, na
