@@ -60,6 +60,23 @@ Erro clássico que isso evita: desenhar jogo como se fosse tela. Em jogo, menu �
 irrelevante e o entregável do upstream para tecnologia é **contrato de evento**. Desenhar as
 telas e esquecer os eventos entrega meio produto.
 
+### Hospedeiro
+
+Decida também **onde o produto vai morar**, porque isso define o design system do mockup no
+passo 7. Derive do **contexto de acoplamento** declarado na abertura do PRD (registrado em
+`intake.md` ou `concept.md`); se não estiver escrito ou estiver ambíguo, **pergunte**, nunca
+deduza.
+
+| Hospedeiro | Quando | Efeito no mockup |
+|---|---|---|
+| **SayPlus** | módulo acoplado à SayPlus: tela dentro do backoffice, menu lateral da SayPlus, login da SayPlus | usa o **design system SayPlus** (ver `/speckit-produto-mockup`) |
+| **Autônomo** | produto com interface própria, fora da SayPlus | estilo neutro do mockup |
+| **Outro** | encaixa em outro sistema existente (nomeie qual) | estilo neutro, e o sistema fica registrado como pendência de design |
+
+Registre no cabeçalho: `**Hospedeiro**: SayPlus | Autônomo | Outro (<qual>)`. Tipo **Jogo** puro
+não tem hospedeiro de tela; registre `não se aplica`. No **Híbrido**, o hospedeiro vale para o
+back-office.
+
 ## As duas marcas, e por que elas existem
 
 Proposta sem marcação de origem produz ancoragem: o usuário aceita o enquadramento do agente e
@@ -165,6 +182,11 @@ resultado, **incluindo o caminho quando dá errado**.
 O que se repete entre telas e deve se comportar igual em todas: tabela com paginação, filtro de
 período, modal de confirmação, seletor de marca, indicador de estado. Comportamento esperado,
 não implementação.
+
+Se o hospedeiro for **SayPlus**, diga para cada componente qual peça do design system SayPlus o
+atende (Table, Pagination, Dialog, ConfirmDialog, Select, Combobox, DatePicker, Badge, KpiCard,
+EmptyState, Toast, PageHeader, Tabs etc.). O que nenhuma peça atende fica marcado como
+**componente novo, fora do DS**: é pendência de design, não decisão deste passo.
 
 ### 7 · Comunicação e notificação
 

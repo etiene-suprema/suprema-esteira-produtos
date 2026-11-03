@@ -143,6 +143,9 @@ uma de três coisas: serve, é dimensão, ou falta stream. O terceiro caso é o 
 - **Não decide stack.** HTML e CSS puros. Escolher framework aqui seria decidir arquitetura num
   passo de produto.
 - **Dado fictício sempre.** Proibido nome, documento, e-mail, telefone ou valor de pessoa real.
+- **Hospedeiro SayPlus usa o DS SayPlus.** Tokens copiados, casco do backoffice e componentes do
+  DS recriados em HTML e CSS; o que o DS não cobre recebe o selo `fora do DS`. Fonte:
+  `https://claude.ai/artifact/2D7bqjuHS5BSji4tsuQdyx`.
 - **Faixa de aviso fixa no topo**, sempre visível.
 - **Escopo que cresce é declarado**, nunca incorporado em silêncio.
 

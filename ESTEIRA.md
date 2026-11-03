@@ -220,7 +220,10 @@ mockup navegável e conduz a entrevista: é onde aparece a divergência que o te
 ideia que ninguém escreveu. Para **jogo**, o equivalente é a **conferência do contrato de evento**
 contra o que já está valendo, porque em jogo é o contrato, e não o menu, que a tecnologia consome.
 O mockup é **descartável**: HTML e CSS puros, dado fictício, nunca aproveitado no código, que
-nasce do archetype na Trilha 3.
+nasce do archetype na Trilha 3. Se o produto for **acoplado à SayPlus** (campo `Hospedeiro` que o
+desenho registra a partir do contexto de acoplamento), o mockup usa o **design system SayPlus**:
+tokens, casco do backoffice e componentes do DS, e o que o DS não cobre aparece marcado como
+`fora do DS`.
 
 O passo 8 (**compilar**) resolve a **fragmentação**. **Unidade de execução, definição única (é
 esta a régua, não há outra):** o **item de entrega** é a unidade que viaja sozinha para o backlog;
@@ -554,6 +557,7 @@ especificação que ninguém manteve.
 | Archetype completo (tradicional) | `SupremaCO/traditional-archetype` | golden path com cache/mensageria/HTTP externo |
 | Archetype completo (hexagonal) | `SupremaCO/layered-archetype` | golden path para domínio complexo, ports/adapters |
 | Sistema hospedeiro | `SupremaCO/sayplus` | onde cada módulo é abrigado |
+| Design system SayPlus | `https://claude.ai/artifact/2D7bqjuHS5BSji4tsuQdyx` | visual do mockup quando o hospedeiro é SayPlus |
 
 **Hierarquia em caso de conflito:** Constituição de Engenharia (em matéria de engenharia) →
 constituição do serviço (em matéria de domínio) → ADR do serviço → documento de feature.
@@ -580,10 +584,14 @@ dois gates acima são a defesa disponível.
 
 ---
 
-**Versão**: 0.6 | **Depende de**: Constituição de Engenharia da Suprema v1.2.1 · Spec Kit v1.0.1
-pinada · Archetypes simplified-traditional / traditional / layered | **Atualizado**: 2026-10-07
+**Versão**: 0.7 | **Depende de**: Constituição de Engenharia da Suprema v1.2.1 · Spec Kit v1.0.1
+pinada · Archetypes simplified-traditional / traditional / layered | **Atualizado**: 2026-11-02
 
-Nesta versão (0.6): a **Trilha 1 ganha nove passos** — dois novos (perfis e atores; histórias) e
+Nesta versão (0.7): o desenho registra o **hospedeiro** do produto (SayPlus, autônomo ou outro),
+derivado do contexto de acoplamento; com hospedeiro SayPlus, o mockup do passo 7 usa o **design
+system SayPlus** e marca o que o DS não cobre.
+
+Versão anterior (0.6): a **Trilha 1 ganha nove passos** — dois novos (perfis e atores; histórias) e
 quatro ampliados (desenho, validar, compilar, portão) —, fechando os seis gaps de rastreabilidade
 entre produto e Engenharia do anexo de arquitetura: história com padrão próprio, perfis antes da
 história, definição única do item de entrega com campo de origem, convergência contra desenho e

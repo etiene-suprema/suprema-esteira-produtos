@@ -99,7 +99,8 @@ em coisa que não estava escrita). O que sair volta para o `desenho.md` e para o
 **jogo**, o equivalente é a **conferência do contrato de evento** contra o que já está valendo,
 porque em jogo o entregável para tecnologia é o contrato, não o menu. O mockup é **descartável**:
 HTML puro, dado fictício, faixa de aviso no topo, nunca aproveitado no código, que nasce do
-archetype na Trilha 3.
+archetype na Trilha 3. Se o produto for **acoplado à SayPlus**, o mockup usa o **design system
+SayPlus** (o desenho registra esse hospedeiro a partir do contexto de acoplamento).
 
 O passo 13 resolve a **fragmentação**. Os artefatos anteriores são o raciocínio; a unidade de
 execução é o **item de entrega**, que viaja sozinho para o backlog. A compilação gera um arquivo

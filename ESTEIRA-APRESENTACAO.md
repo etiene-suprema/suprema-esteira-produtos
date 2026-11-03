@@ -113,7 +113,8 @@ permissões no formato da plataforma** (pronta para o catálogo SayPlus, fechand
 segurança na fronteira) e os **sinais de comportamento do produto** (notificação, dependência,
 volume, horário), que são a evidência escrita para a escolha da variante do archetype na Trilha
 2. A validação (passo 7) prova o entendimento; para jogo, o equivalente é a **conferência do
-contrato de evento**. O mockup é **descartável**: nada dele entra no código.
+contrato de evento**. O mockup é **descartável**: nada dele entra no código. Com produto acoplado
+à SayPlus, o mockup usa o **design system SayPlus** e marca o que o DS não cobre.
 
 O passo 8 compila tudo em **itens prontos para o backlog** mais o **PRD consolidado**, agora com
 a **história e o requisito de origem** em cada item, para a rastreabilidade não se perder. Os

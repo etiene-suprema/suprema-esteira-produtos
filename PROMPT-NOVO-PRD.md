@@ -76,7 +76,7 @@ Não antecipe isso agora.
 |---|---|
 | `[NOME-DO-PRODUTO-EM-KEBAB-CASE]` | vira o nome do diretório do projeto |
 | `[3 A 5 LINHAS]` | insumo do passo de captação. Escreva do ponto de vista de quem sofre a dor, não da solução |
-| `[Contexto de acoplamento]` | apague e escreva "produto autônomo" se não se encaixa em nada existente |
+| `[Contexto de acoplamento]` | apague e escreva "produto autônomo" se não se encaixa em nada existente. Se for módulo da SayPlus, escreva **SayPlus**: o mockup sai no design system SayPlus |
 
 ## O que acontece depois de colar
 
